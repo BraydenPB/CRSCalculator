@@ -5,6 +5,7 @@ import autoprefixer from 'autoprefixer';
 
 export default defineConfig({
   plugins: [preact()],
+  base: '/CRSCalculator/', // GitHub Pages repository name
   build: {
     outDir: 'dist',
     rollupOptions: {
