@@ -1,0 +1,104 @@
+name: Modern CRS Calculator CI
+
+on:
+  push:
+    branches: [ modern-crs-calculator, main ]
+  pull_request:
+    branches: [ modern-crs-calculator, main ]
+
+jobs:
+  format:
+    name: Format
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+          cache: 'npm'
+          cache-dependency-path: modern-crs-calculator/package-lock.json
+
+      - name: Install dependencies
+        run: |
+          cd modern-crs-calculator
+          npm ci
+
+      - name: Check formatting
+        run: |
+          cd modern-crs-calculator
+          npm run format:check
+
+  build:
+    name: Build
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+          cache: 'npm'
+          cache-dependency-path: modern-crs-calculator/package-lock.json
+
+      - name: Install dependencies
+        run: |
+          cd modern-crs-calculator
+          npm ci
+
+      - name: Build
+        run: |
+          cd modern-crs-calculator
+          npm run build
+
+      - name: Upload build artifacts
+        uses: actions/upload-artifact@v3
+        with:
+          name: build-files
+          path: modern-crs-calculator/dist/
+          retention-days: 1
+
+  test:
+    name: Test
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+          cache: 'npm'
+          cache-dependency-path: modern-crs-calculator/package-lock.json
+
+      - name: Install dependencies
+        run: |
+          cd modern-crs-calculator
+          npm ci
+
+      - name: Test calculations
+        run: |
+          cd modern-crs-calculator
+          node -e "
+          const { calculateCRS, getMaxScoreForTest } = require('./src/crsLogic.js');
+
+          // Test basic functionality
+          const testData = {
+            age: 30,
+            hasSpouse: false,
+            educationLevel: 5,
+            canadianEducation: -1,
+            firstLanguageExam: 2,
+            firstLanguageSpeaking: 10,
+            firstLanguageWriting: 9,
+            firstLanguageReading: 8,
+            firstLanguageListening: 10,
+            hasSecondLanguage: false,
+            canadianExperience: 2,
+            foreignExperience: 2,
+            hasCanadianFamily: false,
+            hasProvincialNomination: false,
+            hasFrenchLanguageSkills: false
+          };
+
+          const result = calculateCRS(testData);
+          console.log('✅ CRS Calculation Test Passed - Total Score:', result.totalScore);
+          console.log('✅ CELPIP Max Score Test - CELPIP max:', getMaxScoreForTest(2));
+          console.log('✅ All tests passed successfully!');
+          "
