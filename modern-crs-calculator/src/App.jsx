@@ -1123,7 +1123,7 @@ export default function App() {
         )}
 
         <div className="calculator-grid">
-          <div className="lg:col-span-2 space-y-8">
+          <div className="lg:col-span-3 space-y-8">
             <div className="bg-white rounded-2xl shadow-lg p-6 border border-gray-100 dark:bg-gray-800 dark:border-gray-700">
               <div className="flex items-center gap-2 mb-6">
                 <div className="w-6 h-6 bg-blue-100 rounded-full flex items-center justify-center dark:bg-blue-900">
@@ -1176,11 +1176,11 @@ export default function App() {
             </div>
           </div>
 
-          <div className="lg:col-span-1">
+          <div className="lg:col-span-3">
             {result && <ResultsDisplay result={result} />}
 
             {!result && (
-              <div className="bg-white rounded-2xl shadow-lg p-6 border border-gray-100 sticky top-8 dark:bg-gray-800 dark:border-gray-700">
+              <div className="bg-white rounded-2xl shadow-lg p-6 border border-gray-100 dark:bg-gray-800 dark:border-gray-700">
                 <div className="flex items-center gap-2 mb-4">
                   <svg className="w-5 h-5 text-blue-600 dark:text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
