@@ -1130,16 +1130,7 @@ export default function App() {
           </div>
         </header>
 
-              {/* Error Display - Mobile Optimized */}
-        {errors.general && (
-          <div className="mx-4 mt-4 mb-4 bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-xl flex items-center gap-3 fade-in lg:mx-0 lg:mt-8 lg:mb-8 lg:px-6 lg:py-4">
-            <svg className="w-5 h-5 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-            </svg>
-            <span className="font-medium text-sm lg:text-base">{errors.general}</span>
-          </div>
-        )}
-
+    
         {/* Main Form Content */}
         <div className="calculator-grid">
           <div className="lg:col-span-3 space-y-6 lg:space-y-8">
@@ -1265,6 +1256,15 @@ export default function App() {
 
               {/* Desktop Calculate Button */}
               <div className="text-center space-section">
+                {/* Desktop Error Display - Contextual */}
+                {errors.general && (
+                  <div className="mb-6 bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-xl flex items-center gap-3 fade-in shadow-lg shadow-red-100/50 dark:shadow-red-900/20">
+                    <svg className="w-5 h-5 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                    </svg>
+                    <span className="font-medium text-sm">{errors.general}</span>
+                  </div>
+                )}
                 <button
                   onClick={calculateScore}
                   className="btn-primary"
@@ -1347,6 +1347,15 @@ export default function App() {
           </div>
         </footer>
 
+        {/* Mobile Error Display - Contextual */}
+        {errors.general && (
+          <div className="lg:hidden fixed bottom-24 right-6 left-6 z-40 bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-xl flex items-center gap-3 fade-in shadow-lg shadow-red-100/50 dark:shadow-red-900/20">
+            <svg className="w-5 h-5 text-red-600 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+            </svg>
+            <span className="font-medium text-sm flex-1">{errors.general}</span>
+          </div>
+        )}
         {/* Mobile Floating Action Button */}
         <div className="lg:hidden fixed bottom-6 right-6 z-50">
           <button
