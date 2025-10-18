@@ -1,5 +1,5 @@
 import { h } from 'preact'
-import { useState } from 'preact/hooks'
+import { useState, useRef, useEffect } from 'preact/hooks'
 import { calculateCRS, getMaxScoreForTest } from './crsLogic.js'
 
 // Language score dropdown options based on new-scores-data.txt
@@ -141,168 +141,441 @@ function getTestScale(examType) {
   }
 }
 
+// Modern Custom Dropdown Component
+const CustomDropdown = ({ options, value, onChange, placeholder, className = "" }) => {
+  const [isOpen, setIsOpen] = useState(false)
+  const [highlightedIndex, setHighlightedIndex] = useState(-1)
+  const dropdownRef = useRef(null)
+
+  const selectedOption = options.find(opt => opt.value === value)
+  const displayValue = selectedOption ? selectedOption.label : placeholder
+
+  const handleSelect = (option) => {
+    onChange(option.value)
+    setIsOpen(false)
+    setHighlightedIndex(-1)
+  }
+
+  const handleClickOutside = (e) => {
+    if (dropdownRef.current && !dropdownRef.current.contains(e.target)) {
+      setIsOpen(false)
+      setHighlightedIndex(-1)
+    }
+  }
+
+  useEffect(() => {
+    if (isOpen) {
+      document.addEventListener('click', handleClickOutside)
+      return () => document.removeEventListener('click', handleClickOutside)
+    }
+  }, [isOpen])
+
+  const handleKeyDown = (e) => {
+    e.preventDefault()
+    switch (e.key) {
+      case 'Enter':
+      case ' ':
+        if (isOpen && highlightedIndex >= 0) {
+          handleSelect(options[highlightedIndex])
+        } else {
+          setIsOpen(!isOpen)
+        }
+        break
+      case 'ArrowDown':
+        if (!isOpen) {
+          setIsOpen(true)
+        } else {
+          setHighlightedIndex(prev => (prev + 1) % options.length)
+        }
+        break
+      case 'ArrowUp':
+        if (isOpen) {
+          setHighlightedIndex(prev => prev <= 0 ? options.length - 1 : prev - 1)
+        }
+        break
+      case 'Escape':
+        setIsOpen(false)
+        setHighlightedIndex(-1)
+        break
+    }
+  }
+
+  return (
+    <div className={`custom-dropdown ${className}`} ref={dropdownRef}>
+      <div
+        className={`custom-dropdown-trigger ${isOpen ? 'open' : ''}`}
+        onClick={() => setIsOpen(!isOpen)}
+        onKeyDown={handleKeyDown}
+        tabIndex={0}
+        role="combobox"
+        aria-expanded={isOpen}
+        aria-haspopup="listbox"
+      >
+        <span className={value ? 'text-gray-900' : 'custom-dropdown-placeholder'}>
+          {displayValue}
+        </span>
+        <svg
+          className={`custom-dropdown-arrow ${isOpen ? 'open' : ''}`}
+          fill="none"
+          stroke="currentColor"
+          viewBox="0 0 24 24"
+        >
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+        </svg>
+      </div>
+
+      <div className={`custom-dropdown-menu ${isOpen ? 'open' : ''}`} role="listbox">
+        {options.map((option, index) => (
+          <div
+            key={option.value}
+            className={`custom-dropdown-option ${
+              option.value === value ? 'selected' : ''
+            } ${highlightedIndex === index ? 'highlighted' : ''}`}
+            onClick={() => handleSelect(option)}
+            role="option"
+            aria-selected={option.value === value}
+          >
+            {option.label}
+          </div>
+        ))}
+      </div>
+    </div>
+  )
+}
+
 // Language Score Dropdown Component
 const LanguageScoreDropdown = ({ examType, skill, value, onChange, label }) => {
   const options = getLanguageScoreOptions(examType, skill)
+  const dropdownOptions = [
+    { value: '', label: 'Select score...' },
+    ...options.map(option => ({
+      value: option.value,
+      label: `${option.label}${option.clb > 0 ? ` (CLB ${option.clb})` : ''}`
+    }))
+  ]
+
+  const selectedOption = options.find(opt => opt.value === value)
 
   return (
-    <div className="form-group">
-      <label className="form-label">{label}</label>
-      <select
-        className="select"
-        value={value || ''}
-        onChange={e => onChange(e.target.value)}
-      >
-        <option value="">Select score</option>
-        {options.map(option => (
-          <option key={option.value} value={option.value}>
-            {option.label}
-          </option>
-        ))}
-      </select>
-      <small className="text-gray-500">
-        {getTestScale(examType)}
-      </small>
+    <div className="form-group fade-in">
+      <label className="form-label flex items-center gap-2">
+        {label}
+        <span className="text-xs font-normal text-blue-600 bg-blue-50 px-2 py-1 rounded-full">
+          CLB
+        </span>
+      </label>
+      <div className="relative">
+        <CustomDropdown
+          options={dropdownOptions}
+          value={value || ''}
+          onChange={onChange}
+          placeholder="Select score..."
+        />
+        {value && selectedOption && (
+          <div className="absolute right-4 top-1/2 transform -translate-y-1/2 z-10">
+            <span className={`inline-flex items-center px-2 py-1 rounded-full text-xs font-medium ${
+              selectedOption.clb >= 9
+                ? 'bg-green-100 text-green-800'
+                : selectedOption.clb >= 7
+                ? 'bg-yellow-100 text-yellow-800'
+                : 'bg-red-100 text-red-800'
+            }`}>
+              CLB {selectedOption.clb}
+            </span>
+          </div>
+        )}
+      </div>
+      <div className="mt-2 flex items-center justify-between">
+        <small className="text-gray-500 text-sm">
+          {getTestScale(examType)}
+        </small>
+        {value && selectedOption?.clb >= 7 && (
+          <span className="text-xs text-green-600 font-medium flex items-center gap-1">
+            ✓ Eligible for points
+          </span>
+        )}
+      </div>
     </div>
   )
 }
 
 // Form Components
 const PersonalInfoForm = ({ data, onChange }) => (
-  <div className="form-section">
+  <div className="form-section fade-in">
     <h3 className="section-title">Personal Information</h3>
 
-    <div className="form-group">
-      <label className="form-label">Age</label>
-      <input
-        type="number"
-        min="17"
-        max="45"
-        className="input"
-        value={data.age || ''}
-        onChange={e => onChange('age', parseInt(e.target.value) || 0)}
-        required
-      />
-      <small className="text-gray-500">Age must be between 17-45 years</small>
-    </div>
+    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+      <div className="form-group">
+        <label className="form-label flex items-center gap-2">
+          Age
+          <span className="text-xs font-normal text-gray-500 bg-gray-100 px-2 py-1 rounded-full">
+            17-45 years
+          </span>
+        </label>
+        <div className="relative">
+          <input
+            type="number"
+            min="17"
+            max="45"
+            className="input text-lg font-semibold"
+            value={data.age || ''}
+            onChange={e => onChange('age', parseInt(e.target.value) || 0)}
+            required
+            placeholder="Enter your age"
+          />
+          {data.age && (
+            <div className="absolute right-3 top-1/2 transform -translate-y-1/2">
+              <span className={`text-xs font-medium px-2 py-1 rounded-full ${
+                data.age >= 20 && data.age <= 29
+                  ? 'bg-green-100 text-green-800'
+                  : data.age >= 18 && data.age <= 35
+                  ? 'bg-yellow-100 text-yellow-800'
+                  : 'bg-red-100 text-red-800'
+              }`}>
+                {data.age >= 20 && data.age <= 29 ? 'Max points' :
+                 data.age >= 18 && data.age <= 35 ? 'Good points' : 'Lower points'}
+              </span>
+            </div>
+          )}
+        </div>
+        <div className="mt-2 flex items-center gap-2">
+          <svg className="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+          </svg>
+          <small className="text-gray-500">Age must be between 17-45 years</small>
+        </div>
+      </div>
 
-    <div className="form-group">
-      <label className="form-label">Marital Status</label>
-      <select
-        className="select"
-        value={data.maritalStatus || ''}
-        onChange={e => onChange('maritalStatus', parseInt(e.target.value))}
-        required
-      >
-        <option value="">Select marital status</option>
-        <option value="1">Annulled Marriage</option>
-        <option value="2">Common-Law</option>
-        <option value="3">Divorced / Separated</option>
-        <option value="4">Legally Separated</option>
-        <option value="5">Married</option>
-        <option value="6">Never Married / Single</option>
-        <option value="7">Widowed</option>
-      </select>
+      <div className="form-group">
+        <label className="form-label">Marital Status</label>
+        <div className="relative">
+          <CustomDropdown
+            options={[
+              { value: '', label: 'Select marital status...' },
+              { value: '6', label: 'Never Married / Single' },
+              { value: '5', label: 'Married' },
+              { value: '2', label: 'Common-Law' },
+              { value: '3', label: 'Divorced / Separated' },
+              { value: '4', label: 'Legally Separated' },
+              { value: '1', label: 'Annulled Marriage' },
+              { value: '7', label: 'Widowed' }
+            ]}
+            value={data.maritalStatus?.toString() || ''}
+            onChange={(value) => onChange('maritalStatus', value ? parseInt(value) : '')}
+            placeholder="Select marital status..."
+          />
+        </div>
+        {data.maritalStatus && (
+          <div className="mt-2 flex items-center gap-2">
+            <svg className="w-4 h-4 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+            </svg>
+            <small className="text-green-600 font-medium">Status selected</small>
+          </div>
+        )}
+      </div>
     </div>
 
     {(data.maritalStatus === 2 || data.maritalStatus === 5) && (
-      <>
-        <div className="form-group">
-          <label className="form-label">
-            Is your spouse or common-law partner a citizen or permanent resident of Canada?
-          </label>
-          <select
-            className="select"
-            value={data.spouseIsCanadianCitizen !== undefined ? (data.spouseIsCanadianCitizen ? 'true' : 'false') : ''}
-            onChange={e => onChange('spouseIsCanadianCitizen', e.target.value === 'true')}
-          >
-            <option value="">Select...</option>
-            <option value="false">No</option>
-            <option value="true">Yes</option>
-          </select>
+      <div className="mt-6 p-6 bg-blue-50 rounded-xl border border-blue-200 fade-in">
+        <div className="flex items-center gap-2 mb-4">
+          <svg className="w-5 h-5 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
+          </svg>
+          <h4 className="font-semibold text-blue-900">Spouse/Partner Information</h4>
         </div>
 
-        <div className="form-group">
-          <label className="form-label">
-            Will your spouse or common-law partner come with you to Canada?
-          </label>
-          <select
-            className="select"
-            value={data.spouseAccompanying !== undefined ? (data.spouseAccompanying ? 'true' : 'false') : ''}
-            onChange={e => onChange('spouseAccompanying', e.target.value === 'true')}
-          >
-            <option value="">Select...</option>
-            <option value="false">No</option>
-            <option value="true">Yes</option>
-          </select>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <div className="form-group">
+            <label className="form-label">
+              Is your spouse or common-law partner a citizen or permanent resident of Canada?
+            </label>
+            <CustomDropdown
+              options={[
+                { value: '', label: 'Select status...' },
+                { value: 'false', label: 'No' },
+                { value: 'true', label: 'Yes' }
+              ]}
+              value={data.spouseIsCanadianCitizen !== undefined ? (data.spouseIsCanadianCitizen ? 'true' : 'false') : ''}
+              onChange={(value) => onChange('spouseIsCanadianCitizen', value === 'true')}
+              placeholder="Select status..."
+            />
+            {data.spouseIsCanadianCitizen === true && (
+              <div className="mt-2 flex items-center gap-2">
+                <svg className="w-4 h-4 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                </svg>
+                <small className="text-green-600 font-medium">Additional points may apply</small>
+              </div>
+            )}
+          </div>
+
+          <div className="form-group">
+            <label className="form-label">
+              Will your spouse or common-law partner come with you to Canada?
+            </label>
+            <CustomDropdown
+              options={[
+                { value: '', label: 'Select option...' },
+                { value: 'false', label: 'No' },
+                { value: 'true', label: 'Yes' }
+              ]}
+              value={data.spouseAccompanying !== undefined ? (data.spouseAccompanying ? 'true' : 'false') : ''}
+              onChange={(value) => onChange('spouseAccompanying', value === 'true')}
+              placeholder="Select option..."
+            />
+            {data.spouseAccompanying === true && (
+              <div className="mt-2 flex items-center gap-2">
+                <svg className="w-4 h-4 text-blue-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                </svg>
+                <small className="text-blue-600 font-medium">Spouse factors will be considered</small>
+              </div>
+            )}
+          </div>
         </div>
-      </>
+      </div>
     )}
   </div>
 )
 
 const EducationForm = ({ data, onChange }) => (
-  <div className="form-section">
+  <div className="form-section fade-in">
     <h3 className="section-title">Education</h3>
 
-    <div className="form-group">
-      <label className="form-label">Your Education Level</label>
-      <select
-        className="select"
-        value={data.educationLevel || ''}
-        onChange={e => onChange('educationLevel', parseInt(e.target.value))}
-        required
-      >
-        <option value="">Select education level</option>
-        <option value="1">Less than secondary school</option>
-        <option value="2">Secondary diploma (high school graduation)</option>
-        <option value="3">One-year degree, diploma or certificate</option>
-        <option value="4">
-          Two-year program at university, college, trade or technical school
-        </option>
-        <option value="5">Bachelor's degree OR three or more year program</option>
-        <option value="6">Two or more certificates, diplomas, or degrees</option>
-        <option value="7">Master's degree, OR professional degree</option>
-        <option value="8">Doctoral level university degree (Ph.D.)</option>
-      </select>
-    </div>
+    <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+      <div className="space-y-6">
+        <div className="form-group">
+          <label className="form-label flex items-center gap-2">
+            Your Education Level
+            <span className="text-xs font-normal text-blue-600 bg-blue-50 px-2 py-1 rounded-full">
+              Required
+            </span>
+          </label>
+          <div className="relative">
+            <CustomDropdown
+              options={[
+                { value: '', label: 'Select education level...' },
+                { value: '1', label: 'Less than secondary school' },
+                { value: '2', label: 'Secondary diploma (high school graduation)' },
+                { value: '3', label: 'One-year degree, diploma or certificate' },
+                { value: '4', label: 'Two-year program at university, college, trade or technical school' },
+                { value: '5', label: 'Bachelor\'s degree OR three or more year program' },
+                { value: '6', label: 'Two or more certificates, diplomas, or degrees' },
+                { value: '7', label: 'Master\'s degree, OR professional degree' },
+                { value: '8', label: 'Doctoral level university degree (Ph.D.)' }
+              ]}
+              value={data.educationLevel?.toString() || ''}
+              onChange={(value) => onChange('educationLevel', value ? parseInt(value) : '')}
+              placeholder="Select education level..."
+            />
+            {data.educationLevel && (
+              <div className="absolute right-12 top-1/2 transform -translate-y-1/2">
+                <span className={`inline-flex items-center px-2 py-1 rounded-full text-xs font-medium ${
+                  parseInt(data.educationLevel) >= 7
+                    ? 'bg-green-100 text-green-800'
+                    : parseInt(data.educationLevel) >= 5
+                    ? 'bg-blue-100 text-blue-800'
+                    : parseInt(data.educationLevel) >= 3
+                    ? 'bg-yellow-100 text-yellow-800'
+                    : 'bg-gray-100 text-gray-800'
+                }`}>
+                  {parseInt(data.educationLevel) >= 7 ? 'High points' :
+                   parseInt(data.educationLevel) >= 5 ? 'Good points' :
+                   parseInt(data.educationLevel) >= 3 ? 'Moderate points' : 'Basic points'}
+                </span>
+              </div>
+            )}
+          </div>
+          {data.educationLevel && (
+            <div className="mt-3 p-3 bg-blue-50 rounded-lg border border-blue-200">
+              <div className="flex items-center gap-2">
+                <svg className="w-4 h-4 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                </svg>
+                <span className="text-sm text-blue-800 font-medium">
+                  Education level selected: {parseInt(data.educationLevel) >= 5 ? 'Eligible for skilled worker points' : 'Consider upgrading education'}
+                </span>
+              </div>
+            </div>
+          )}
+        </div>
 
-    <div className="form-group">
-      <label className="form-label">Canadian Education</label>
-      <select
-        className="select"
-        value={data.canadianEducation || ''}
-        onChange={e => onChange('canadianEducation', parseInt(e.target.value))}
-      >
-        <option value="-1">No Canadian education</option>
-        <option value="0">Secondary (high school) or less</option>
-        <option value="1">1- or 2-year diploma or certificate</option>
-        <option value="3">3-year or longer degree, diploma or certificate</option>
-      </select>
-    </div>
-
-    {(data.maritalStatus === 2 || data.maritalStatus === 5) && (
-      <div className="form-group">
-        <label className="form-label">Spouse Education Level</label>
-        <select
-          className="select"
-          value={data.spouseEducationLevel || ''}
-          onChange={e => onChange('spouseEducationLevel', parseInt(e.target.value))}
-        >
-          <option value="">Select education level</option>
-          <option value="1">Less than secondary school</option>
-          <option value="2">Secondary diploma (high school graduation)</option>
-          <option value="3">One-year degree, diploma or certificate</option>
-          <option value="4">
-            Two-year program at university, college, trade or technical school
-          </option>
-          <option value="5">Bachelor's degree OR three or more year program</option>
-          <option value="6">Two or more certificates, diplomas, or degrees</option>
-          <option value="7">Master's degree, OR professional degree</option>
-          <option value="8">Doctoral level university degree (Ph.D.)</option>
-        </select>
+        <div className="form-group">
+          <label className="form-label flex items-center gap-2">
+            Canadian Education
+            <span className="text-xs font-normal text-green-600 bg-green-50 px-2 py-1 rounded-full">
+              Bonus Points
+            </span>
+          </label>
+          <CustomDropdown
+            options={[
+              { value: '-1', label: 'No Canadian education' },
+              { value: '0', label: 'Secondary (high school) or less' },
+              { value: '1', label: '1- or 2-year diploma or certificate' },
+              { value: '3', label: '3-year or longer degree, diploma or certificate' }
+            ]}
+            value={data.canadianEducation?.toString() || ''}
+            onChange={(value) => onChange('canadianEducation', value ? parseInt(value) : '')}
+            placeholder="Select Canadian education level..."
+          />
+          {data.canadianEducation > 0 && (
+            <div className="mt-3 p-3 bg-green-50 rounded-lg border border-green-200">
+              <div className="flex items-center gap-2">
+                <svg className="w-4 h-4 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                </svg>
+                <span className="text-sm text-green-800 font-medium">
+                  Additional points for Canadian education!
+                </span>
+              </div>
+            </div>
+          )}
+        </div>
       </div>
-    )}
+
+      {(data.maritalStatus === 2 || data.maritalStatus === 5) && (
+        <div className="space-y-6">
+          <div className="form-group">
+            <label className="form-label flex items-center gap-2">
+              Spouse Education Level
+              <span className="text-xs font-normal text-purple-600 bg-purple-50 px-2 py-1 rounded-full">
+                Spouse Factor
+              </span>
+            </label>
+            <select
+              className="select"
+              value={data.spouseEducationLevel || ''}
+              onChange={e => onChange('spouseEducationLevel', parseInt(e.target.value))}
+            >
+              <option value="">Select education level...</option>
+              <option value="1">Less than secondary school</option>
+              <option value="2">Secondary diploma (high school graduation)</option>
+              <option value="3">One-year degree, diploma or certificate</option>
+              <option value="4">
+                Two-year program at university, college, trade or technical school
+              </option>
+              <option value="5">Bachelor's degree OR three or more year program</option>
+              <option value="6">Two or more certificates, diplomas, or degrees</option>
+              <option value="7">Master's degree, OR professional degree</option>
+              <option value="8">Doctoral level university degree (Ph.D.)</option>
+            </select>
+            {data.spouseEducationLevel && (
+              <div className="mt-3 p-3 bg-purple-50 rounded-lg border border-purple-200">
+                <div className="flex items-center gap-2">
+                  <svg className="w-4 h-4 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
+                  </svg>
+                  <span className="text-sm text-purple-800 font-medium">
+                    Spouse education factor applied
+                  </span>
+                </div>
+              </div>
+            )}
+          </div>
+        </div>
+      )}
+    </div>
   </div>
 )
 
@@ -331,18 +604,19 @@ const LanguageForm = ({ data, onChange }) => {
 
           <div className="form-group">
             <label className="form-label">Language Test</label>
-            <select
-              className="select"
-              value={data.firstLanguageExam || ''}
-              onChange={e => onChange('firstLanguageExam', parseInt(e.target.value))}
-            >
-              <option value="">Select test</option>
-              <option value="1">IELTS - General Training</option>
-              <option value="2">CELPIP - General test</option>
-              <option value="5">PTE Core</option>
-              <option value="3">TEF Canada</option>
-              <option value="4">TCF Canada</option>
-            </select>
+            <CustomDropdown
+              options={[
+                { value: '', label: 'Select test' },
+                { value: '1', label: 'IELTS - General Training' },
+                { value: '2', label: 'CELPIP - General test' },
+                { value: '5', label: 'PTE Core' },
+                { value: '3', label: 'TEF Canada' },
+                { value: '4', label: 'TCF Canada' }
+              ]}
+              value={data.firstLanguageExam?.toString() || ''}
+              onChange={(value) => onChange('firstLanguageExam', value ? parseInt(value) : '')}
+              placeholder="Select test"
+            />
           </div>
 
           <div className="grid grid-cols-2 gap-4">
@@ -528,32 +802,34 @@ const ExperienceForm = ({ data, onChange }) => (
     <div className="calculator-grid">
       <div className="form-group">
         <label className="form-label">Canadian Work Experience</label>
-        <select
-          className="select"
-          value={data.canadianExperience || ''}
-          onChange={e => onChange('canadianExperience', parseInt(e.target.value))}
-        >
-          <option value="0">None or less than a year</option>
-          <option value="1">1 year</option>
-          <option value="2">2 years</option>
-          <option value="3">3 years</option>
-          <option value="4">4 years</option>
-          <option value="5">5 years or more</option>
-        </select>
+        <CustomDropdown
+          options={[
+            { value: '0', label: 'None or less than a year' },
+            { value: '1', label: '1 year' },
+            { value: '2', label: '2 years' },
+            { value: '3', label: '3 years' },
+            { value: '4', label: '4 years' },
+            { value: '5', label: '5 years or more' }
+          ]}
+          value={data.canadianExperience?.toString() || ''}
+          onChange={(value) => onChange('canadianExperience', value ? parseInt(value) : '')}
+          placeholder="Select Canadian work experience..."
+        />
       </div>
 
       <div className="form-group">
         <label className="form-label">Foreign Work Experience (outside Canada)</label>
-        <select
-          className="select"
-          value={data.foreignExperience || ''}
-          onChange={e => onChange('foreignExperience', parseInt(e.target.value))}
-        >
-          <option value="0">None or less than a year</option>
-          <option value="1">1 year</option>
-          <option value="2">2 years</option>
-          <option value="3">3 years or more</option>
-        </select>
+        <CustomDropdown
+          options={[
+            { value: '0', label: 'None or less than a year' },
+            { value: '1', label: '1 year' },
+            { value: '2', label: '2 years' },
+            { value: '3', label: '3 years or more' }
+          ]}
+          value={data.foreignExperience?.toString() || ''}
+          onChange={(value) => onChange('foreignExperience', value ? parseInt(value) : '')}
+          placeholder="Select foreign work experience..."
+        />
       </div>
 
       {(data.maritalStatus === 2 || data.maritalStatus === 5) && (
@@ -793,43 +1069,165 @@ export default function App() {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50 py-8">
-      <div className="max-w-4xl mx-auto px-4">
-        <header className="text-center mb-8">
-          <h1 className="text-4xl font-bold text-gray-900 mb-2">Modern CRS Calculator</h1>
-          <p className="text-lg text-gray-600">
-            Calculate your Comprehensive Ranking System score for Canadian Express Entry
-          </p>
+    <div className="min-h-screen bg-gradient-to-br from-gray-50 via-blue-50 to-indigo-50">
+      <div className="container mx-auto px-4 py-8 max-w-7xl">
+        <header className="text-center space-section-sm fade-in">
+          <div className="bg-white rounded-2xl shadow-xl p-10 border border-gray-100">
+            <div className="flex items-center justify-center gap-4 mb-6">
+              <div className="w-12 h-12 bg-gradient-to-r from-blue-600 to-indigo-600 rounded-full flex items-center justify-center">
+                <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                </svg>
+              </div>
+              <h1 className="text-4xl font-bold bg-gradient-to-r from-blue-600 to-indigo-600 bg-clip-text text-transparent">
+                Modern CRS Calculator
+              </h1>
+            </div>
+            <p className="text-lg text-gray-600 mb-8">
+              Calculate your Comprehensive Ranking System score for Canadian Express Entry
+            </p>
+            <div className="flex items-center justify-center gap-6 text-sm text-gray-500">
+              <div className="flex items-center gap-2">
+                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+                </svg>
+                <span>Updated for 2025</span>
+              </div>
+              <div className="flex items-center gap-2">
+                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                </svg>
+                <span>Accurate Calculations</span>
+              </div>
+              <div className="flex items-center gap-2">
+                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
+                </svg>
+                <span>Secure & Private</span>
+              </div>
+            </div>
+          </div>
         </header>
 
         {errors.general && (
-          <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded mb-6">
-            {errors.general}
+          <div className="bg-red-50 border border-red-200 text-red-700 px-6 py-4 rounded-xl mb-8 flex items-center gap-3 fade-in">
+            <svg className="w-5 h-5 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+            </svg>
+            <span className="font-medium">{errors.general}</span>
           </div>
         )}
 
-        <div className="space-y-6">
-          <PersonalInfoForm data={formData} onChange={handleInputChange} />
-          <EducationForm data={formData} onChange={handleInputChange} />
-          <LanguageForm data={formData} onChange={handleInputChange} />
-          <SpouseLanguageForm data={formData} onChange={handleInputChange} />
-          <ExperienceForm data={formData} onChange={handleInputChange} />
-          <AdditionalFactorsForm data={formData} onChange={handleInputChange} />
+        <div className="calculator-grid">
+          <div className="lg:col-span-2 space-y-8">
+            <div className="bg-white rounded-2xl shadow-lg p-6 border border-gray-100">
+              <div className="flex items-center gap-2 mb-6">
+                <div className="w-6 h-6 bg-blue-100 rounded-full flex items-center justify-center">
+                  <span className="text-xs font-bold text-blue-600">1</span>
+                </div>
+                <h2 className="text-lg font-semibold text-gray-900">Core Information</h2>
+              </div>
+              <PersonalInfoForm data={formData} onChange={handleInputChange} />
+            </div>
 
-          <div className="text-center">
-            <button onClick={calculateScore} className="btn-primary text-lg px-8 py-4">
-              Calculate My CRS Score
-            </button>
+            <div className="bg-white rounded-2xl shadow-lg p-6 border border-gray-100">
+              <div className="flex items-center gap-2 mb-6">
+                <div className="w-6 h-6 bg-green-100 rounded-full flex items-center justify-center">
+                  <span className="text-xs font-bold text-green-600">2</span>
+                </div>
+                <h2 className="text-lg font-semibold text-gray-900">Education & Language</h2>
+              </div>
+              <div className="space-y-8">
+                <EducationForm data={formData} onChange={handleInputChange} />
+                <LanguageForm data={formData} onChange={handleInputChange} />
+                <SpouseLanguageForm data={formData} onChange={handleInputChange} />
+              </div>
+            </div>
+
+            <div className="bg-white rounded-2xl shadow-lg p-6 border border-gray-100">
+              <div className="flex items-center gap-2 mb-6">
+                <div className="w-6 h-6 bg-purple-100 rounded-full flex items-center justify-center">
+                  <span className="text-xs font-bold text-purple-600">3</span>
+                </div>
+                <h2 className="text-lg font-semibold text-gray-900">Experience & Additional Factors</h2>
+              </div>
+              <div className="space-y-8">
+                <ExperienceForm data={formData} onChange={handleInputChange} />
+                <AdditionalFactorsForm data={formData} onChange={handleInputChange} />
+              </div>
+            </div>
+
+            <div className="text-center space-section-sm">
+              <button
+                onClick={calculateScore}
+                className="btn-primary"
+              >
+                <span className="flex items-center gap-3">
+                  <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 7h6m0 10v-3m-3 3h.01M9 17h.01M9 14h.01M12 14h.01M15 11h.01M12 11h.01M9 11h.01M7 21h10a2 2 0 002-2V5a2 2 0 00-2-2H7a2 2 0 00-2 2v14a2 2 0 002 2z" />
+                  </svg>
+                  Calculate My CRS Score
+                </span>
+              </button>
+            </div>
           </div>
 
-          {result && <ResultsDisplay result={result} />}
+          <div className="lg:col-span-1">
+            {result && <ResultsDisplay result={result} />}
+
+            {!result && (
+              <div className="bg-white rounded-2xl shadow-lg p-6 border border-gray-100 sticky top-8">
+                <div className="flex items-center gap-2 mb-4">
+                  <svg className="w-5 h-5 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                  </svg>
+                  <h3 className="font-semibold text-gray-900">Quick Tips</h3>
+                </div>
+                <div className="space-y-3 text-sm text-gray-600">
+                  <div className="flex items-start gap-2">
+                    <svg className="w-4 h-4 text-green-500 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                    </svg>
+                    <span>Age 20-29 years receives maximum points</span>
+                  </div>
+                  <div className="flex items-start gap-2">
+                    <svg className="w-4 h-4 text-green-500 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                    </svg>
+                    <span>CLB 9+ in all language skills gives maximum points</span>
+                  </div>
+                  <div className="flex items-start gap-2">
+                    <svg className="w-4 h-4 text-green-500 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                    </svg>
+                    <span>Canadian education adds bonus points</span>
+                  </div>
+                  <div className="flex items-start gap-2">
+                    <svg className="w-4 h-4 text-green-500 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                    </svg>
+                    <span>Provincial nomination adds 600 points</span>
+                  </div>
+                </div>
+              </div>
+            )}
+          </div>
         </div>
 
-        <footer className="mt-12 pt-8 border-t border-gray-200 text-center text-gray-600">
-          <p className="text-sm">
-            © 2025 Modern CRS Calculator. This tool is for informational purposes only and does not
-            constitute immigration advice.
-          </p>
+        <footer className="space-section pt-8 border-t border-gray-200">
+          <div className="text-center text-gray-600">
+            <p className="text-sm space-group-sm">
+              © 2025 Modern CRS Calculator. This tool is for informational purposes only and does not
+              constitute immigration advice.
+            </p>
+            <div className="flex items-center justify-center gap-4 text-xs text-gray-500">
+              <span>Privacy Policy</span>
+              <span>•</span>
+              <span>Terms of Use</span>
+              <span>•</span>
+              <span>Contact</span>
+            </div>
+          </div>
         </footer>
       </div>
     </div>
