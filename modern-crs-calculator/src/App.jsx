@@ -1278,9 +1278,6 @@ export default function App() {
                 </button>
               </div>
 
-              {/* Desktop Sidebar */}
-              {result && <ResultsDisplay result={result} />}
-
               {!result && (
                 <div className="bg-white rounded-2xl shadow-lg p-6 border border-gray-100 dark:bg-gray-800 dark:border-gray-700">
                   <div className="flex items-center gap-2 mb-4">
