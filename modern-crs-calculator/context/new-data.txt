@@ -1,0 +1,551 @@
+1) What is your marital status?
+Select...
+
+Annulled Marriage
+
+Common-Law
+
+Divorced / Separated
+
+Legally Separated
+
+Married
+
+Never Married / Single
+
+Widowed
+
+2) i. Is your spouse or common-law partner a citizen or permanent resident of Canada?
+Select...
+
+No
+
+Yes
+
+2) ii. Will your spouse or common-law partner come with you to Canada?
+Select...
+
+No
+
+Yes
+
+3) How old are you?
+Choose the best answer:
+
+If you’ve been invited to apply, enter your age on the date you were invited.
+OR
+
+If you plan to complete an Express Entry profile, enter your current age.
+
+Select...
+
+17 years of age or less
+
+18 years of age
+
+19 years of age
+
+20 years of age
+
+21 years of age
+
+22 years of age
+
+23 years of age
+
+24 years of age
+
+25 years of age
+
+26 years of age
+
+27 years of age
+
+28 years of age
+
+29 years of age
+
+30 years of age
+
+31 years of age
+
+32 years of age
+
+33 years of age
+
+34 years of age
+
+35 years of age
+
+36 years of age
+
+37 years of age
+
+38 years of age
+
+39 years of age
+
+40 years of age
+
+41 years of age
+
+42 years of age
+
+43 years of age
+
+44 years of age
+
+45 years of age or more
+
+4) What is your level of education?
+Enter the highest level of education for which you:
+
+earned a Canadian degree, diploma or certificate or
+
+had an Educational Credential Assessment (ECA) if you did your study outside Canada. (ECAs must be from an approved agency, in the last five years)
+
+Note: a Canadian degree, diploma or certificate must either have been earned at an accredited Canadian university, college, trade or technical school, or other institute in Canada. Distance learning counts for education points, but not for bonus points in your profile or application.
+
+Select...
+
+None, or less than secondary (high school)
+
+Secondary diploma (high school graduation)
+
+One-year program at a university, college, trade or technical school, or other institute
+
+Two-year program at a university, college, trade or technical school, or other institute
+
+Bachelor's degree (three or more year program at a university, college, trade or technical school, or other institute)
+
+Two or more certificates, diplomas or degrees. One must be for a program of three or more years
+
+Master's degree, or professional degree needed to practice in a licensed profession (see Help)
+
+Doctoral level university degree (PhD)
+
+4b) Have you earned a Canadian degree, diploma or certificate?
+Note: to answer yes:
+
+English or French as a Second Language must not have made up more than half your study
+
+you must not have studied under an award that required you to return to your home country after graduation to apply your skills and knowledge
+
+you must have studied at a school within Canada (foreign campuses don’t count)
+
+you had to be enrolled full time for at least eight months, unless you completed the study or training program (in whole or in part) between March 2020 and August 2022
+
+you had to have been physically present in Canada for at least eight months, unless you completed the study or training program (in whole or in part) between March 2020 and August 2022
+
+Select...
+
+No
+
+Yes
+
+4c) Choose the best answer to describe this level of education.
+Select...
+
+Secondary (high school) or less
+
+One- or two-year diploma or certificate
+
+Degree, diploma or certificate of three years or longer OR a Master’s, professional or doctoral degree of at least one academic year
+
+5) Official languages: Canada's official languages are English and French.
+You need to submit language test results that are less than two years old for all programs under Express Entry, even if English or French is your first language.
+
+i. Are your test results less than two years old?
+
+Select...
+
+No
+
+Yes
+
+ii. Which language test did you take for your first official language?
+
+Select...
+
+CELPIP-G
+
+IELTS
+
+PTE Core
+
+TEF Canada
+
+TCF Canada
+
+Enter your test scores:
+(Order and labels for each test type as shown)
+
+Speaking:
+
+Listening:
+
+Reading:
+
+Writing:
+
+[Dropdown ranges as detailed previously]
+
+iii. Do you have other language results?
+If so, which language test did you take for your second official language?
+Test results must be less than two years old.
+
+Select...
+
+TEF Canada
+
+TCF Canada
+
+not applicable
+
+6) Work Experience
+i. In the last 10 years, how many years of skilled work experience in Canada do you have?
+
+It must have been paid and full-time (or an equal amount in part-time).
+
+You must have been physically in Canada and working for a Canadian employer. This includes remote work.
+
+"Skilled work" in the NOC is TEER 0, 1, 2 or 3 category jobs:
+
+If you aren’t sure of the NOC TEER category for this job, you can find your NOC.
+
+Select...
+
+None or less than a year
+
+1 year
+
+2 years
+
+3 years
+
+4 years
+
+5 years or more
+
+ii. In the last 10 years, how many total years of foreign skilled work experience do you have?
+
+It must have been paid, full-time (or an equal amount in part-time), and in only one occupation (NOC TEER category 0, 1, 2 or 3$$.
+
+Select...
+
+None or less than a year
+
+1 year
+
+2 years
+
+3 years or more
+
+7) Do you have a certificate of qualification from a Canadian province, territory or federal body?
+Note: A certificate of qualification lets people work in some skilled trades in Canada. Only the provinces, territories and a federal body can issue these certificates. To get one, a person must have them assess their training, trade experience and skills to and then pass a certification exam.
+
+People usually have to go to the province or territory to be assessed. They may also need experience and training from an employer in Canada.
+
+This isn’t the same as a nomination from a province or territory.
+
+Select...
+
+No
+
+Yes
+
+8) Do you have a valid job offer supported by a Labour Market Impact Assessment (if needed)?
+A valid job offer must be
+
+full-time
+
+in a skilled job listed as TEER 0, 1, 2 or 3 in the 2021 National Occupational Classification
+
+supported by a Labour Market Impact Assessment (LMIA) or exempt from needing one
+
+for one year from the time you become a permanent resident
+
+A job offer isn’t valid if your employer is:
+
+an embassy, high commission or consulate in Canada or
+
+on the list of ineligible employers.
+
+Whether an offer is valid or not also depends on different factors, depending on your case. See a full list of criteria for valid job offers.
+
+Select...
+
+No
+
+Yes
+
+Additional Points
+9) Do you have a nomination certificate from a province or territory?
+
+Select...
+
+No
+
+Yes
+
+10) Do you or your spouse or common law partner (if they will come with you to Canada) have at least one brother or sister living in Canada who is a citizen or permanent resident?
+
+Note: to answer yes, the brother or sister must be:
+
+18 years old or older
+
+related to you or your partner by blood, marriage, common-law partnership or adoption
+
+have a parent in common with you or your partner
+
+blood (biological)
+
+adoption
+
+marriage (step-brother or step-sister)
+
+Select...
+
+No
+
+Yes
+
+11) What is the highest level of education for which your spouse or common-law partner's has:
+earned a Canadian degree, diploma or certificate; or
+
+had an Educational Credential Assessment (ECA)? (ECAs must be from an approved agency, in the last five years)
+
+To get the correct number of points, make sure you choose the answer that best reflects your case. For example:
+
+If you have TWO Bachelor’s degrees, or one Bachelor’s AND a two year college diploma, choose – “Two or more certificates, diplomas, or degrees. One must be for a program of three or more years.”
+
+Select...
+
+None, or less than secondary (high school)
+
+Secondary diploma (high school graduation)
+
+One-year program at a university, college, trade or technical school, or other institute
+
+Two-year program at a university, college, trade or technical school, or other institute
+
+Bachelor's degree (three or more year program at a university, college, trade or technical school, or other institute)
+
+Two or more certificates, diplomas or degrees. One must be for a program of three or more years
+
+Master's degree, or professional degree needed to practice in a licensed profession
+
+Doctoral level university degree (PhD)
+
+12) In the last 10 years, how many years of skilled work experience in Canada does your spouse/common-law partner have?
+It must have been paid, full-time (or an equal amount in part-time), and in one or more NOC TEER category 0, 1, 2, or 3 jobs.
+
+Select...
+
+None or less than a year
+
+1 year
+
+2 years
+
+3 years
+
+4 years
+
+5 years or more
+
+13) i) Did your spouse or common-law partner take a language test? If so, which one?
+Test results must be less than two years old.
+
+Select...
+
+CELPIP-G
+
+IELTS
+
+PTE Core
+
+TEF Canada
+
+TCF Canada
+
+not applicable
+
+ii) Enter the test scores for:
+
+Speaking:
+
+Listening:
+
+Reading:
+
+Writing:
+
+[Dropdowns, TEF Canada ranges, as previously detailed]
+
+Button:
+
+Calculate your score
+
+All Score Dropdowns for Language Tests in the CRS Calculator
+For CELPIP-G, IELTS, PTE Core (Main Applicant & Spouse–for all four sections):
+Speaking:
+
+7.5 – 9.0
+
+7.0
+
+6.5
+
+6.0
+
+5.5
+
+5.0
+
+4.0 – 4.5
+
+0 – 3.5
+
+Listening:
+
+8.5 – 9.0
+
+8.0
+
+7.5
+
+6.0 – 7.0
+
+5.5
+
+5.0
+
+4.5 – 4.0
+
+0 – 4.0
+
+Reading:
+
+8.0 – 9.0
+
+7.0 – 7.5
+
+6.5
+
+6.0
+
+5.0 – 5.5
+
+4.0 – 4.5
+
+3.5
+
+0 – 3.0
+
+Writing:
+
+7.5 – 9.0
+
+7.0
+
+6.5
+
+6.0
+
+5.5
+
+5.0
+
+4.0 – 4.5
+
+0 – 3.5
+
+These are the only values given for CELPIP-G, IELTS, and PTE Core in all fields.
+
+For TEF Canada (Main Applicant & Spouse):
+Speaking:
+
+393–450
+
+371–392
+
+349–370
+
+310–348
+
+271–309
+
+226–270
+
+181–225
+
+0–180
+
+Listening:
+
+316–360
+
+298–315
+
+280–297
+
+249–279
+
+217–248
+
+181–216
+
+145–180
+
+0–144
+
+Reading:
+
+263–300
+
+248–262
+
+233–247
+
+207–232
+
+181–206
+
+151–180
+
+121–150
+
+0–120
+
+Writing:
+
+393–450
+
+371–392
+
+349–370
+
+310–348
+
+271–309
+
+226–270
+
+181–225
+
+0–180
+
+For TCF Canada (Main Applicant & Spouse):
+On the calculator page, the options for TCF Canada exactly match those for TEF Canada (mirrored):
+
+Speaking: 393–450 down to 0–180 (same as TEF)
+
+Listening: 316–360 down to 0–144
+
+Reading: 263–300 down to 0–120
+
+Writing: 393–450 down to 0–180
+
+For “not applicable” or blank language result:
+[No dropdown—test score fields hidden if “not applicable”]
