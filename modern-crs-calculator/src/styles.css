@@ -186,11 +186,7 @@
 }
 
 .section-title {
-  @apply text-xl font-bold text-gray-900 mb-6 pb-3 border-l-4 border-blue-500 pl-4;
-  background: linear-gradient(135deg, #1e40af 0%, #3b82f6 100%);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
+  @apply text-xl font-bold text-gray-900 mb-4;
 }
 
 .progress-step {

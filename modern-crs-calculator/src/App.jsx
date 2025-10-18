@@ -302,14 +302,7 @@ const LanguageScoreDropdown = ({ examType, skill, value, onChange, label }) => {
 // Form Components
 const PersonalInfoForm = ({ data, onChange }) => (
   <div className="form-section fade-in">
-    <div className="flex items-center gap-3 mb-6">
-      <div className="w-8 h-8 bg-blue-100 rounded-full flex items-center justify-center">
-        <svg className="w-4 h-4 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
-        </svg>
-      </div>
-      <h3 className="section-title">Personal Information</h3>
-    </div>
+    <h3 className="section-title">Personal Information</h3>
 
     <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
       <div className="form-group">
@@ -448,15 +441,7 @@ const PersonalInfoForm = ({ data, onChange }) => (
 
 const EducationForm = ({ data, onChange }) => (
   <div className="form-section fade-in">
-    <div className="flex items-center gap-3 mb-6">
-      <div className="w-8 h-8 bg-green-100 rounded-full flex items-center justify-center">
-        <svg className="w-4 h-4 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 14l9-5-9-5-9 5 9 5z" />
-          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 14l6.16-3.422a12.083 12.083 0 01.665 6.479A11.952 11.952 0 0012 20.055a11.952 11.952 0 00-6.824-2.998 12.078 12.078 0 01.665-6.479L12 14z" />
-        </svg>
-      </div>
-      <h3 className="section-title">Education</h3>
-    </div>
+    <h3 className="section-title">Education</h3>
 
     <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
       <div className="space-y-6">
