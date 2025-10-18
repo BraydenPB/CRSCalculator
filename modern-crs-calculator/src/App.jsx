@@ -1215,6 +1215,30 @@ export default function App() {
             )}
             </div>
 
+            {/* Mobile Calculate Button */}
+            <div className="lg:hidden mx-3 mb-6">
+              {/* Mobile Error Display */}
+              {errors.general && (
+                <div className="mb-4 bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-xl flex items-center gap-3 fade-in shadow-lg shadow-red-100/50 dark:shadow-red-900/20">
+                  <svg className="w-5 h-5 text-red-600 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                  </svg>
+                  <span className="font-medium text-sm flex-1">{errors.general}</span>
+                </div>
+              )}
+              <button
+                onClick={calculateScore}
+                className="w-full btn-primary"
+              >
+                <span className="flex items-center justify-center gap-3">
+                  <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 7h6m0 10v-3m-3 3h.01M9 17h.01M9 14h.01M12 14h.01M15 11h.01M12 11h.01M9 11h.01M7 21h10a2 2 0 002-2V5a2 2 0 00-2-2H7a2 2 0 00-2 2v14a2 2 0 002 2z" />
+                  </svg>
+                  Calculate My CRS Score
+                </span>
+              </button>
+            </div>
+
             {/* Desktop Form Sections */}
             <div className="hidden lg:block">
               <div className="bg-white rounded-2xl shadow-lg p-6 border border-gray-100 dark:bg-gray-800 dark:border-gray-700 mb-8">
@@ -1347,27 +1371,7 @@ export default function App() {
           </div>
         </footer>
 
-        {/* Mobile Error Display - Contextual */}
-        {errors.general && (
-          <div className="lg:hidden fixed bottom-24 right-6 left-6 z-40 bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-xl flex items-center gap-3 fade-in shadow-lg shadow-red-100/50 dark:shadow-red-900/20">
-            <svg className="w-5 h-5 text-red-600 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-            </svg>
-            <span className="font-medium text-sm flex-1">{errors.general}</span>
-          </div>
-        )}
-        {/* Mobile Floating Action Button */}
-        <div className="lg:hidden fixed bottom-6 right-6 z-50">
-          <button
-            onClick={calculateScore}
-            className="fab-button"
-          >
-            <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 7h6m0 10v-3m-3 3h.01M9 17h.01M9 14h.01M12 14h.01M15 11h.01M12 11h.01M9 11h.01M7 21h10a2 2 0 002-2V5a2 2 0 00-2-2H7a2 2 0 00-2 2v14a2 2 0 002 2z" />
-            </svg>
-          </button>
         </div>
-      </div>
     </div>
   )
 }
