@@ -453,24 +453,22 @@ const EducationForm = ({ data, onChange }) => (
             </span>
           </label>
           <div className="relative">
-            <select
-              className="select"
-              value={data.educationLevel || ''}
-              onChange={e => onChange('educationLevel', parseInt(e.target.value))}
-              required
-            >
-              <option value="">Select education level...</option>
-              <option value="1">Less than secondary school</option>
-              <option value="2">Secondary diploma (high school graduation)</option>
-              <option value="3">One-year degree, diploma or certificate</option>
-              <option value="4">
-                Two-year program at university, college, trade or technical school
-              </option>
-              <option value="5">Bachelor's degree OR three or more year program</option>
-              <option value="6">Two or more certificates, diplomas, or degrees</option>
-              <option value="7">Master's degree, OR professional degree</option>
-              <option value="8">Doctoral level university degree (Ph.D.)</option>
-            </select>
+            <CustomDropdown
+              options={[
+                { value: '', label: 'Select education level...' },
+                { value: '1', label: 'Less than secondary school' },
+                { value: '2', label: 'Secondary diploma (high school graduation)' },
+                { value: '3', label: 'One-year degree, diploma or certificate' },
+                { value: '4', label: 'Two-year program at university, college, trade or technical school' },
+                { value: '5', label: 'Bachelor\'s degree OR three or more year program' },
+                { value: '6', label: 'Two or more certificates, diplomas, or degrees' },
+                { value: '7', label: 'Master\'s degree, OR professional degree' },
+                { value: '8', label: 'Doctoral level university degree (Ph.D.)' }
+              ]}
+              value={data.educationLevel?.toString() || ''}
+              onChange={(value) => onChange('educationLevel', value ? parseInt(value) : '')}
+              placeholder="Select education level..."
+            />
             {data.educationLevel && (
               <div className="absolute right-12 top-1/2 transform -translate-y-1/2">
                 <span className={`inline-flex items-center px-2 py-1 rounded-full text-xs font-medium ${
@@ -510,16 +508,17 @@ const EducationForm = ({ data, onChange }) => (
               Bonus Points
             </span>
           </label>
-          <select
-            className="select"
-            value={data.canadianEducation || ''}
-            onChange={e => onChange('canadianEducation', parseInt(e.target.value))}
-          >
-            <option value="-1">No Canadian education</option>
-            <option value="0">Secondary (high school) or less</option>
-            <option value="1">1- or 2-year diploma or certificate</option>
-            <option value="3">3-year or longer degree, diploma or certificate</option>
-          </select>
+          <CustomDropdown
+            options={[
+              { value: '-1', label: 'No Canadian education' },
+              { value: '0', label: 'Secondary (high school) or less' },
+              { value: '1', label: '1- or 2-year diploma or certificate' },
+              { value: '3', label: '3-year or longer degree, diploma or certificate' }
+            ]}
+            value={data.canadianEducation?.toString() || ''}
+            onChange={(value) => onChange('canadianEducation', value ? parseInt(value) : '')}
+            placeholder="Select Canadian education level..."
+          />
           {data.canadianEducation > 0 && (
             <div className="mt-3 p-3 bg-green-50 rounded-lg border border-green-200">
               <div className="flex items-center gap-2">
@@ -605,18 +604,19 @@ const LanguageForm = ({ data, onChange }) => {
 
           <div className="form-group">
             <label className="form-label">Language Test</label>
-            <select
-              className="select"
-              value={data.firstLanguageExam || ''}
-              onChange={e => onChange('firstLanguageExam', parseInt(e.target.value))}
-            >
-              <option value="">Select test</option>
-              <option value="1">IELTS - General Training</option>
-              <option value="2">CELPIP - General test</option>
-              <option value="5">PTE Core</option>
-              <option value="3">TEF Canada</option>
-              <option value="4">TCF Canada</option>
-            </select>
+            <CustomDropdown
+              options={[
+                { value: '', label: 'Select test' },
+                { value: '1', label: 'IELTS - General Training' },
+                { value: '2', label: 'CELPIP - General test' },
+                { value: '5', label: 'PTE Core' },
+                { value: '3', label: 'TEF Canada' },
+                { value: '4', label: 'TCF Canada' }
+              ]}
+              value={data.firstLanguageExam?.toString() || ''}
+              onChange={(value) => onChange('firstLanguageExam', value ? parseInt(value) : '')}
+              placeholder="Select test"
+            />
           </div>
 
           <div className="grid grid-cols-2 gap-4">
@@ -802,32 +802,34 @@ const ExperienceForm = ({ data, onChange }) => (
     <div className="calculator-grid">
       <div className="form-group">
         <label className="form-label">Canadian Work Experience</label>
-        <select
-          className="select"
-          value={data.canadianExperience || ''}
-          onChange={e => onChange('canadianExperience', parseInt(e.target.value))}
-        >
-          <option value="0">None or less than a year</option>
-          <option value="1">1 year</option>
-          <option value="2">2 years</option>
-          <option value="3">3 years</option>
-          <option value="4">4 years</option>
-          <option value="5">5 years or more</option>
-        </select>
+        <CustomDropdown
+          options={[
+            { value: '0', label: 'None or less than a year' },
+            { value: '1', label: '1 year' },
+            { value: '2', label: '2 years' },
+            { value: '3', label: '3 years' },
+            { value: '4', label: '4 years' },
+            { value: '5', label: '5 years or more' }
+          ]}
+          value={data.canadianExperience?.toString() || ''}
+          onChange={(value) => onChange('canadianExperience', value ? parseInt(value) : '')}
+          placeholder="Select Canadian work experience..."
+        />
       </div>
 
       <div className="form-group">
         <label className="form-label">Foreign Work Experience (outside Canada)</label>
-        <select
-          className="select"
-          value={data.foreignExperience || ''}
-          onChange={e => onChange('foreignExperience', parseInt(e.target.value))}
-        >
-          <option value="0">None or less than a year</option>
-          <option value="1">1 year</option>
-          <option value="2">2 years</option>
-          <option value="3">3 years or more</option>
-        </select>
+        <CustomDropdown
+          options={[
+            { value: '0', label: 'None or less than a year' },
+            { value: '1', label: '1 year' },
+            { value: '2', label: '2 years' },
+            { value: '3', label: '3 years or more' }
+          ]}
+          value={data.foreignExperience?.toString() || ''}
+          onChange={(value) => onChange('foreignExperience', value ? parseInt(value) : '')}
+          placeholder="Select foreign work experience..."
+        />
       </div>
 
       {(data.maritalStatus === 2 || data.maritalStatus === 5) && (
@@ -1069,9 +1071,9 @@ export default function App() {
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-50 via-blue-50 to-indigo-50">
       <div className="container mx-auto px-4 py-8 max-w-7xl">
-        <header className="text-center mb-12 fade-in">
-          <div className="bg-white rounded-2xl shadow-xl p-8 mb-8 border border-gray-100">
-            <div className="flex items-center justify-center gap-3 mb-4">
+        <header className="text-center space-section-sm fade-in">
+          <div className="bg-white rounded-2xl shadow-xl p-10 border border-gray-100">
+            <div className="flex items-center justify-center gap-4 mb-6">
               <div className="w-12 h-12 bg-gradient-to-r from-blue-600 to-indigo-600 rounded-full flex items-center justify-center">
                 <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
@@ -1081,7 +1083,7 @@ export default function App() {
                 Modern CRS Calculator
               </h1>
             </div>
-            <p className="text-lg text-gray-600 mb-6">
+            <p className="text-lg text-gray-600 mb-8">
               Calculate your Comprehensive Ranking System score for Canadian Express Entry
             </p>
             <div className="flex items-center justify-center gap-6 text-sm text-gray-500">
@@ -1116,7 +1118,7 @@ export default function App() {
           </div>
         )}
 
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+        <div className="calculator-grid">
           <div className="lg:col-span-2 space-y-8">
             <div className="bg-white rounded-2xl shadow-lg p-6 border border-gray-100">
               <div className="flex items-center gap-2 mb-6">
@@ -1155,10 +1157,10 @@ export default function App() {
               </div>
             </div>
 
-            <div className="text-center">
+            <div className="text-center space-section-sm">
               <button
                 onClick={calculateScore}
-                className="btn-primary text-lg px-12 py-4 shadow-xl hover:shadow-2xl transform hover:-translate-y-1 transition-all duration-200"
+                className="btn-primary"
               >
                 <span className="flex items-center gap-3">
                   <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -1212,9 +1214,9 @@ export default function App() {
           </div>
         </div>
 
-        <footer className="mt-16 pt-8 border-t border-gray-200">
+        <footer className="space-section pt-8 border-t border-gray-200">
           <div className="text-center text-gray-600">
-            <p className="text-sm mb-2">
+            <p className="text-sm space-group-sm">
               © 2025 Modern CRS Calculator. This tool is for informational purposes only and does not
               constitute immigration advice.
             </p>

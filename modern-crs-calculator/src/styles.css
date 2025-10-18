@@ -162,15 +162,15 @@
 }
 
 .form-section {
-  @apply bg-white rounded-2xl shadow-lg p-8 mb-8 border border-gray-100 hover:shadow-xl transition-all duration-300;
+  @apply bg-white rounded-2xl shadow-lg p-10 space-card border border-gray-100 hover:shadow-xl transition-all duration-300;
 }
 
 .form-group {
-  @apply mb-8;
+  @apply space-group;
 }
 
 .form-label {
-  @apply block text-sm font-semibold text-gray-800 mb-3 text-gray-900;
+  @apply block text-sm font-semibold text-gray-800 space-label text-gray-900;
 }
 
 .radio-group {
@@ -182,11 +182,11 @@
 }
 
 .score-display {
-  @apply bg-gradient-to-br from-blue-50 via-indigo-50 to-purple-50 rounded-2xl p-8 border border-blue-200 shadow-lg;
+  @apply bg-gradient-to-br from-blue-50 via-indigo-50 to-purple-50 rounded-2xl p-8 border border-blue-200 shadow-lg space-card;
 }
 
 .section-title {
-  @apply text-xl font-bold text-gray-900 mb-4;
+  @apply text-xl font-bold text-gray-900 space-card-sm;
 }
 
 .progress-step {
@@ -202,11 +202,11 @@
 }
 
 .calculator-grid {
-  @apply grid grid-cols-1 lg:grid-cols-2 gap-8;
+  @apply grid grid-cols-1 lg:grid-cols-3 gap-12;
 }
 
 .result-card {
-  @apply bg-white rounded-2xl shadow-xl p-8 border border-gray-100 hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-1;
+  @apply bg-white rounded-2xl shadow-xl p-8 border border-gray-100 hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-1 space-card;
 }
 
 .points-badge {
@@ -225,13 +225,46 @@
   @apply bg-gradient-to-r from-red-100 to-rose-100 text-red-800 border border-red-200;
 }
 
+/* Spacing System - Consistent Scale */
+.space-section {
+  @apply mb-12;
+}
+
+.space-section-sm {
+  @apply mb-8;
+}
+
+.space-card {
+  @apply mb-6;
+}
+
+.space-card-sm {
+  @apply mb-4;
+}
+
+.space-group {
+  @apply mb-6;
+}
+
+.space-group-sm {
+  @apply mb-4;
+}
+
+.space-input {
+  @apply mb-3;
+}
+
+.space-label {
+  @apply mb-2;
+}
+
 /* Additional modern styling */
 body {
   @apply bg-gradient-to-br from-gray-50 via-blue-50 to-indigo-50 min-h-screen;
 }
 
 #crs-root {
-  @apply py-8 px-4;
+  @apply py-12 px-6 sm:px-8;
 }
 
 .container {
