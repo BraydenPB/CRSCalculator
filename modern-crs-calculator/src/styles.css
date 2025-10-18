@@ -199,8 +199,28 @@
   background: linear-gradient(to right, rgb(37, 99, 235), rgb(79, 70, 229)) !important;
 }
 
+/* Mobile-First Form Section */
+.form-section-mobile {
+  @apply mx-3 mb-6 bg-white rounded-2xl shadow-md p-4 border border-gray-100 dark:bg-gray-800 dark:border-gray-700;
+}
+
+/* Desktop Form Section (Responsive) */
 .form-section {
-  @apply bg-white rounded-2xl shadow-lg p-10 space-card border border-gray-100 hover:shadow-xl transition-all duration-300 dark:bg-gray-800 dark:border-gray-700;
+  @apply lg:bg-white lg:rounded-2xl lg:shadow-lg lg:p-10 lg:mb-6 lg:border lg:border-gray-100 lg:hover:shadow-xl lg:transition-all lg:duration-300 dark:lg:bg-gray-800 dark:lg:border-gray-700;
+}
+
+/* Floating Action Button */
+.fab-button {
+  @apply w-14 h-14 bg-gradient-to-r from-blue-600 to-indigo-600 text-white rounded-full shadow-lg hover:shadow-xl transition-all duration-300 flex items-center justify-center hover:scale-110 active:scale-95;
+  box-shadow: 0 8px 25px rgba(59, 130, 246, 0.3), 0 4px 10px rgba(0, 0, 0, 0.1);
+}
+
+.fab-button:hover {
+  box-shadow: 0 12px 35px rgba(59, 130, 246, 0.4), 0 6px 15px rgba(0, 0, 0, 0.15);
+}
+
+.fab-button:active {
+  box-shadow: 0 4px 15px rgba(59, 130, 246, 0.3), 0 2px 6px rgba(0, 0, 0, 0.1);
 }
 
 .form-group {
