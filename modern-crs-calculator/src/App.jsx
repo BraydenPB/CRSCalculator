@@ -1,6 +1,7 @@
 import { h } from 'preact'
 import { useState, useRef, useEffect } from 'preact/hooks'
 import { calculateCRS, getMaxScoreForTest } from './crsLogic.js'
+import ThemeToggle from './components/ThemeToggle.jsx'
 
 // Language score dropdown options based on new-scores-data.txt
 const LANGUAGE_SCORE_OPTIONS = {
@@ -211,7 +212,7 @@ const CustomDropdown = ({ options, value, onChange, placeholder, className = "" 
         aria-expanded={isOpen}
         aria-haspopup="listbox"
       >
-        <span className={value ? 'text-gray-900' : 'custom-dropdown-placeholder'}>
+        <span className={value ? 'text-gray-900 dark:text-gray-100' : 'custom-dropdown-placeholder'}>
           {displayValue}
         </span>
         <svg
@@ -275,10 +276,10 @@ const LanguageScoreDropdown = ({ examType, skill, value, onChange, label }) => {
           <div className="absolute right-4 top-1/2 transform -translate-y-1/2 z-10">
             <span className={`inline-flex items-center px-2 py-1 rounded-full text-xs font-medium ${
               selectedOption.clb >= 9
-                ? 'bg-green-100 text-green-800'
+                ? 'bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200'
                 : selectedOption.clb >= 7
-                ? 'bg-yellow-100 text-yellow-800'
-                : 'bg-red-100 text-red-800'
+                ? 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-200'
+                : 'bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-200'
             }`}>
               CLB {selectedOption.clb}
             </span>
@@ -327,10 +328,10 @@ const PersonalInfoForm = ({ data, onChange }) => (
             <div className="absolute right-3 top-1/2 transform -translate-y-1/2">
               <span className={`text-xs font-medium px-2 py-1 rounded-full ${
                 data.age >= 20 && data.age <= 29
-                  ? 'bg-green-100 text-green-800'
+                  ? 'bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200'
                   : data.age >= 18 && data.age <= 35
-                  ? 'bg-yellow-100 text-yellow-800'
-                  : 'bg-red-100 text-red-800'
+                  ? 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-200'
+                  : 'bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-200'
               }`}>
                 {data.age >= 20 && data.age <= 29 ? 'Max points' :
                  data.age >= 18 && data.age <= 35 ? 'Good points' : 'Lower points'}
@@ -473,12 +474,12 @@ const EducationForm = ({ data, onChange }) => (
               <div className="absolute right-12 top-1/2 transform -translate-y-1/2">
                 <span className={`inline-flex items-center px-2 py-1 rounded-full text-xs font-medium ${
                   parseInt(data.educationLevel) >= 7
-                    ? 'bg-green-100 text-green-800'
+                    ? 'bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200'
                     : parseInt(data.educationLevel) >= 5
-                    ? 'bg-blue-100 text-blue-800'
+                    ? 'bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-200'
                     : parseInt(data.educationLevel) >= 3
-                    ? 'bg-yellow-100 text-yellow-800'
-                    : 'bg-gray-100 text-gray-800'
+                    ? 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-200'
+                    : 'bg-gray-100 text-gray-800 dark:bg-gray-700 dark:text-gray-200'
                 }`}>
                   {parseInt(data.educationLevel) >= 7 ? 'High points' :
                    parseInt(data.educationLevel) >= 5 ? 'Good points' :
@@ -920,7 +921,7 @@ const ResultsDisplay = ({ result }) => {
 
       <div className="text-center mb-8">
         <div className={`text-5xl font-bold ${getScoreColor(totalScore)}`}>{totalScore}</div>
-        <div className="text-gray-600 mt-2">points out of 1200+</div>
+        <div className="text-gray-600 mt-2 dark:text-gray-400">points out of 1200+</div>
       </div>
 
       <div className="space-y-4">
@@ -989,8 +990,8 @@ const ResultsDisplay = ({ result }) => {
         </div>
       </div>
 
-      <div className="mt-6 p-4 bg-gray-50 rounded-lg">
-        <p className="text-sm text-gray-600">
+      <div className="mt-6 p-4 bg-gray-50 rounded-lg dark:bg-gray-700">
+        <p className="text-sm text-gray-600 dark:text-gray-300">
           <strong>Note:</strong> This calculator provides an estimate of your CRS score. Actual
           scores may vary based on official IRCC calculations and policy changes.
         </p>
@@ -1069,24 +1070,27 @@ export default function App() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-50 via-blue-50 to-indigo-50">
+    <div className="min-h-screen bg-gradient-to-br from-gray-50 via-blue-50 to-indigo-50 dark:from-gray-900 dark:via-gray-800 dark:to-gray-900">
       <div className="container mx-auto px-4 py-8 max-w-7xl">
         <header className="text-center space-section-sm fade-in">
-          <div className="bg-white rounded-2xl shadow-xl p-10 border border-gray-100">
-            <div className="flex items-center justify-center gap-4 mb-6">
-              <div className="w-12 h-12 bg-gradient-to-r from-blue-600 to-indigo-600 rounded-full flex items-center justify-center">
-                <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
-                </svg>
+          <div className="bg-white rounded-2xl shadow-xl p-10 border border-gray-100 dark:bg-gray-800 dark:border-gray-700">
+            <div className="flex items-center justify-between mb-6">
+              <div className="flex items-center justify-center gap-4 flex-1">
+                <div className="w-12 h-12 bg-gradient-to-r from-blue-600 to-indigo-600 rounded-full flex items-center justify-center">
+                  <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                  </svg>
+                </div>
+                <h1 className="text-4xl font-bold bg-gradient-to-r from-blue-600 to-indigo-600 bg-clip-text text-transparent">
+                  Modern CRS Calculator
+                </h1>
               </div>
-              <h1 className="text-4xl font-bold bg-gradient-to-r from-blue-600 to-indigo-600 bg-clip-text text-transparent">
-                Modern CRS Calculator
-              </h1>
+              <ThemeToggle />
             </div>
-            <p className="text-lg text-gray-600 mb-8">
+            <p className="text-lg text-gray-600 mb-8 dark:text-gray-300">
               Calculate your Comprehensive Ranking System score for Canadian Express Entry
             </p>
-            <div className="flex items-center justify-center gap-6 text-sm text-gray-500">
+            <div className="flex items-center justify-center gap-6 text-sm text-gray-500 dark:text-gray-400">
               <div className="flex items-center gap-2">
                 <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
@@ -1120,22 +1124,22 @@ export default function App() {
 
         <div className="calculator-grid">
           <div className="lg:col-span-2 space-y-8">
-            <div className="bg-white rounded-2xl shadow-lg p-6 border border-gray-100">
+            <div className="bg-white rounded-2xl shadow-lg p-6 border border-gray-100 dark:bg-gray-800 dark:border-gray-700">
               <div className="flex items-center gap-2 mb-6">
-                <div className="w-6 h-6 bg-blue-100 rounded-full flex items-center justify-center">
-                  <span className="text-xs font-bold text-blue-600">1</span>
+                <div className="w-6 h-6 bg-blue-100 rounded-full flex items-center justify-center dark:bg-blue-900">
+                  <span className="text-xs font-bold text-blue-600 dark:text-blue-300">1</span>
                 </div>
-                <h2 className="text-lg font-semibold text-gray-900">Core Information</h2>
+                <h2 className="text-lg font-semibold text-gray-900 dark:text-gray-100">Core Information</h2>
               </div>
               <PersonalInfoForm data={formData} onChange={handleInputChange} />
             </div>
 
-            <div className="bg-white rounded-2xl shadow-lg p-6 border border-gray-100">
+            <div className="bg-white rounded-2xl shadow-lg p-6 border border-gray-100 dark:bg-gray-800 dark:border-gray-700">
               <div className="flex items-center gap-2 mb-6">
-                <div className="w-6 h-6 bg-green-100 rounded-full flex items-center justify-center">
-                  <span className="text-xs font-bold text-green-600">2</span>
+                <div className="w-6 h-6 bg-green-100 rounded-full flex items-center justify-center dark:bg-green-900">
+                  <span className="text-xs font-bold text-green-600 dark:text-green-300">2</span>
                 </div>
-                <h2 className="text-lg font-semibold text-gray-900">Education & Language</h2>
+                <h2 className="text-lg font-semibold text-gray-900 dark:text-gray-100">Education & Language</h2>
               </div>
               <div className="space-y-8">
                 <EducationForm data={formData} onChange={handleInputChange} />
@@ -1144,12 +1148,12 @@ export default function App() {
               </div>
             </div>
 
-            <div className="bg-white rounded-2xl shadow-lg p-6 border border-gray-100">
+            <div className="bg-white rounded-2xl shadow-lg p-6 border border-gray-100 dark:bg-gray-800 dark:border-gray-700">
               <div className="flex items-center gap-2 mb-6">
-                <div className="w-6 h-6 bg-purple-100 rounded-full flex items-center justify-center">
-                  <span className="text-xs font-bold text-purple-600">3</span>
+                <div className="w-6 h-6 bg-purple-100 rounded-full flex items-center justify-center dark:bg-purple-900">
+                  <span className="text-xs font-bold text-purple-600 dark:text-purple-300">3</span>
                 </div>
-                <h2 className="text-lg font-semibold text-gray-900">Experience & Additional Factors</h2>
+                <h2 className="text-lg font-semibold text-gray-900 dark:text-gray-100">Experience & Additional Factors</h2>
               </div>
               <div className="space-y-8">
                 <ExperienceForm data={formData} onChange={handleInputChange} />
@@ -1176,14 +1180,14 @@ export default function App() {
             {result && <ResultsDisplay result={result} />}
 
             {!result && (
-              <div className="bg-white rounded-2xl shadow-lg p-6 border border-gray-100 sticky top-8">
+              <div className="bg-white rounded-2xl shadow-lg p-6 border border-gray-100 sticky top-8 dark:bg-gray-800 dark:border-gray-700">
                 <div className="flex items-center gap-2 mb-4">
-                  <svg className="w-5 h-5 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <svg className="w-5 h-5 text-blue-600 dark:text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
                   </svg>
-                  <h3 className="font-semibold text-gray-900">Quick Tips</h3>
+                  <h3 className="font-semibold text-gray-900 dark:text-gray-100">Quick Tips</h3>
                 </div>
-                <div className="space-y-3 text-sm text-gray-600">
+                <div className="space-y-3 text-sm text-gray-600 dark:text-gray-300">
                   <div className="flex items-start gap-2">
                     <svg className="w-4 h-4 text-green-500 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
@@ -1214,13 +1218,13 @@ export default function App() {
           </div>
         </div>
 
-        <footer className="space-section pt-8 border-t border-gray-200">
-          <div className="text-center text-gray-600">
+        <footer className="space-section pt-8 border-t border-gray-200 dark:border-gray-600">
+          <div className="text-center text-gray-600 dark:text-gray-400">
             <p className="text-sm space-group-sm">
               © 2025 Modern CRS Calculator. This tool is for informational purposes only and does not
               constitute immigration advice.
             </p>
-            <div className="flex items-center justify-center gap-4 text-xs text-gray-500">
+            <div className="flex items-center justify-center gap-4 text-xs text-gray-500 dark:text-gray-500">
               <span>Privacy Policy</span>
               <span>•</span>
               <span>Terms of Use</span>
