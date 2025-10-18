@@ -309,7 +309,7 @@ const PersonalInfoForm = ({ data, onChange }) => (
       <div className="form-group">
         <label className="form-label flex items-center gap-2">
           Age
-          <span className="text-xs font-normal text-gray-500 bg-gray-100 px-2 py-1 rounded-full">
+          <span className="text-xs font-normal text-gray-500 bg-gray-100 px-2 py-1 rounded-full ml-2">
             17-45 years
           </span>
         </label>
@@ -712,14 +712,15 @@ const LanguageForm = ({ data, onChange }) => {
         )}
       </div>
 
-      <div className="form-group">
-        <label className="form-label">
+      <div className="form-group mt-4">
+        <label className="form-label flex items-center gap-3 cursor-pointer">
           <input
             type="checkbox"
             checked={data.hasSecondLanguage || false}
             onChange={e => onChange('hasSecondLanguage', e.target.checked)}
+            className="w-4 h-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500"
           />{' '}
-          I have second language test results
+          <span className="text-gray-900 dark:text-gray-100">I have second language test results</span>
         </label>
       </div>
     </div>
@@ -1225,7 +1226,7 @@ export default function App() {
 
             {/* Desktop Form Sections */}
             <div className="hidden lg:block">
-              <div className="bg-white rounded-2xl shadow-lg p-6 border border-gray-100 dark:bg-gray-800 dark:border-gray-700">
+              <div className="bg-white rounded-2xl shadow-lg p-6 border border-gray-100 dark:bg-gray-800 dark:border-gray-700 mb-8">
                 <div className="flex items-center gap-2 mb-6">
                   <div className="w-6 h-6 bg-blue-100 rounded-full flex items-center justify-center dark:bg-blue-900">
                     <span className="text-xs font-bold text-blue-600 dark:text-blue-300">1</span>
@@ -1235,7 +1236,7 @@ export default function App() {
                 <PersonalInfoForm data={formData} onChange={handleInputChange} />
               </div>
 
-              <div className="bg-white rounded-2xl shadow-lg p-6 border border-gray-100 dark:bg-gray-800 dark:border-gray-700">
+              <div className="bg-white rounded-2xl shadow-lg p-6 border border-gray-100 dark:bg-gray-800 dark:border-gray-700 mb-8">
                 <div className="flex items-center gap-2 mb-6">
                   <div className="w-6 h-6 bg-green-100 rounded-full flex items-center justify-center dark:bg-green-900">
                     <span className="text-xs font-bold text-green-600 dark:text-green-300">2</span>
@@ -1249,7 +1250,7 @@ export default function App() {
                 </div>
               </div>
 
-              <div className="bg-white rounded-2xl shadow-lg p-6 border border-gray-100 dark:bg-gray-800 dark:border-gray-700">
+              <div className="bg-white rounded-2xl shadow-lg p-6 border border-gray-100 dark:bg-gray-800 dark:border-gray-700 mb-8">
                 <div className="flex items-center gap-2 mb-6">
                   <div className="w-6 h-6 bg-purple-100 rounded-full flex items-center justify-center dark:bg-purple-900">
                     <span className="text-xs font-bold text-purple-600 dark:text-purple-300">3</span>
@@ -1263,7 +1264,7 @@ export default function App() {
               </div>
 
               {/* Desktop Calculate Button */}
-              <div className="text-center space-section-sm">
+              <div className="text-center space-section">
                 <button
                   onClick={calculateScore}
                   className="btn-primary"

@@ -206,7 +206,7 @@
 
 /* Desktop Form Section (Responsive) */
 .form-section {
-  @apply lg:bg-white lg:rounded-2xl lg:shadow-lg lg:p-10 lg:mb-6 lg:border lg:border-gray-100 lg:hover:shadow-xl lg:transition-all lg:duration-300 dark:lg:bg-gray-800 dark:lg:border-gray-700;
+  @apply lg:bg-white lg:rounded-2xl lg:shadow-lg lg:p-10 lg:mb-8 lg:border lg:border-gray-100 lg:hover:shadow-xl lg:transition-all lg:duration-300 dark:lg:bg-gray-800 dark:lg:border-gray-700;
 }
 
 /* Floating Action Button */
