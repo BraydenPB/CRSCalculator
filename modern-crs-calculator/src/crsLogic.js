@@ -3,28 +3,32 @@ import { z } from 'zod'
 // Comprehensive CRS Data Schema
 export const CRSInputSchema = z.object({
   // Personal Information
-  age: z.number().min(17).max(44),
+  age: z.number().min(17).max(45),
   birthDate: z.string().optional(),
-  hasSpouse: z.boolean(),
+  maritalStatus: z.number().min(1).max(7), // 1: Annulled, 2: Common-Law, 3: Divorced, 4: Legally Separated, 5: Married, 6: Never Married/Single, 7: Widowed
+
+  // Spouse Information (if applicable)
+  spouseIsCanadianCitizen: z.boolean().optional(),
+  spouseAccompanying: z.boolean().optional(),
 
   // Education
   educationLevel: z.number().min(1).max(8), // 1-8 scale from original system
   canadianEducation: z.number().min(-1).max(3), // -1: No, 0: High school, 1: 1-2 years, 3: 3+ years
 
   // Language - First Language
-  firstLanguageExam: z.number().min(1).max(4), // 1: IELTS, 2: CELPIP, 3: TEF, 4: TCF
-  firstLanguageSpeaking: z.number().min(0).max(12), // Max 12 for CELPIP, validated dynamically
-  firstLanguageWriting: z.number().min(0).max(12), // Max 12 for CELPIP, validated dynamically
-  firstLanguageReading: z.number().min(0).max(12), // Max 12 for CELPIP, validated dynamically
-  firstLanguageListening: z.number().min(0).max(12), // Max 12 for CELPIP, validated dynamically
+  firstLanguageExam: z.number().min(1).max(5), // 1: IELTS, 2: CELPIP, 3: TEF, 4: TCF, 5: PTE Core
+  firstLanguageSpeaking: z.string(), // Dropdown value
+  firstLanguageWriting: z.string(), // Dropdown value
+  firstLanguageReading: z.string(), // Dropdown value
+  firstLanguageListening: z.string(), // Dropdown value
 
   // Language - Second Language
   hasSecondLanguage: z.boolean(),
-  secondLanguageExam: z.number().min(1).max(4).optional(),
-  secondLanguageSpeaking: z.number().min(0).max(12).optional(), // Max 12 for CELPIP, validated dynamically
-  secondLanguageWriting: z.number().min(0).max(12).optional(), // Max 12 for CELPIP, validated dynamically
-  secondLanguageReading: z.number().min(0).max(12).optional(), // Max 12 for CELPIP, validated dynamically
-  secondLanguageListening: z.number().min(0).max(12).optional(), // Max 12 for CELPIP, validated dynamically
+  secondLanguageExam: z.number().min(1).max(5).optional(),
+  secondLanguageSpeaking: z.string().optional(), // Dropdown value
+  secondLanguageWriting: z.string().optional(), // Dropdown value
+  secondLanguageReading: z.string().optional(), // Dropdown value
+  secondLanguageListening: z.string().optional(), // Dropdown value
 
   // Work Experience
   canadianExperience: z.number().min(0).max(5), // 0: none, 1-5: years
@@ -32,10 +36,11 @@ export const CRSInputSchema = z.object({
 
   // Spouse Information (if applicable)
   spouseEducationLevel: z.number().min(1).max(8).optional(),
-  spouseLanguageSpeaking: z.number().min(0).max(12).optional(), // Max 12 for CELPIP, validated dynamically
-  spouseLanguageWriting: z.number().min(0).max(12).optional(), // Max 12 for CELPIP, validated dynamically
-  spouseLanguageReading: z.number().min(0).max(12).optional(), // Max 12 for CELPIP, validated dynamically
-  spouseLanguageListening: z.number().min(0).max(12).optional(), // Max 12 for CELPIP, validated dynamically
+  spouseLanguageExam: z.number().min(0).max(5).optional(), // 0: Not applicable, 1-5: test types
+  spouseLanguageSpeaking: z.string().optional(), // Dropdown value
+  spouseLanguageWriting: z.string().optional(), // Dropdown value
+  spouseLanguageReading: z.string().optional(), // Dropdown value
+  spouseLanguageListening: z.string().optional(), // Dropdown value
   spouseCanadianExperience: z.number().min(0).max(5).optional(),
 
   // Additional Factors
@@ -45,6 +50,133 @@ export const CRSInputSchema = z.object({
   // French Language Bonus
   hasFrenchLanguageSkills: z.boolean(),
 })
+
+// Helper functions for dropdown value to CLB conversion
+const LANGUAGE_SCORE_OPTIONS = {
+  // CELPIP-G - Integer scores (All Skills: Speaking, Listening, Reading, Writing)
+  celpip: [
+    { value: '12', clb: 12 },
+    { value: '11', clb: 11 },
+    { value: '10', clb: 10 },
+    { value: '9', clb: 9 },
+    { value: '8', clb: 8 },
+    { value: '7', clb: 7 },
+    { value: '6', clb: 6 },
+    { value: '5', clb: 5 },
+    { value: '4', clb: 4 },
+    { value: '3', clb: 3 },
+    { value: '2', clb: 2 },
+    { value: '1', clb: 1 },
+    { value: 'M', clb: 0 }
+  ],
+
+  // IELTS and PTE Core - Same ranges for both tests
+  ielts_pte: [
+    { value: '7.5-9.0', clb: 10 },
+    { value: '7.0', clb: 9 },
+    { value: '6.5', clb: 8 },
+    { value: '6.0', clb: 7 },
+    { value: '5.5', clb: 6 },
+    { value: '5.0', clb: 5 },
+    { value: '4.0-4.5', clb: 4 },
+    { value: '0-3.5', clb: 0 }
+  ],
+
+  // TEF Canada Score Ranges
+  tef: {
+    speaking_writing_reading: [
+      { value: '393-450', clb: 10 },
+      { value: '371-392', clb: 9 },
+      { value: '349-370', clb: 8 },
+      { value: '310-348', clb: 7 },
+      { value: '271-309', clb: 6 },
+      { value: '226-270', clb: 5 },
+      { value: '181-225', clb: 4 },
+      { value: '0-180', clb: 0 }
+    ],
+    listening: [
+      { value: '316-360', clb: 10 },
+      { value: '298-315', clb: 9 },
+      { value: '280-297', clb: 8 },
+      { value: '249-279', clb: 7 },
+      { value: '217-248', clb: 6 },
+      { value: '181-216', clb: 5 },
+      { value: '145-180', clb: 4 },
+      { value: '0-144', clb: 0 }
+    ]
+  },
+
+  // TCF Canada Score Ranges
+  tcf: {
+    speaking_writing: [
+      { value: '16-20', clb: 10 },
+      { value: '14-15', clb: 9 },
+      { value: '12-13', clb: 8 },
+      { value: '10-11', clb: 7 },
+      { value: '7-9', clb: 6 },
+      { value: '6-4', clb: 5 },
+      { value: '0-3', clb: 0 }
+    ],
+    listening: [
+      { value: '549-699', clb: 10 },
+      { value: '523-548', clb: 9 },
+      { value: '503-522', clb: 8 },
+      { value: '458-502', clb: 7 },
+      { value: '398-457', clb: 6 },
+      { value: '369-397', clb: 5 },
+      { value: '331-368', clb: 4 },
+      { value: '0-330', clb: 0 }
+    ],
+    reading: [
+      { value: '549-699', clb: 10 },
+      { value: '524-548', clb: 9 },
+      { value: '499-523', clb: 8 },
+      { value: '453-498', clb: 7 },
+      { value: '406-452', clb: 6 },
+      { value: '375-405', clb: 5 },
+      { value: '342-374', clb: 4 },
+      { value: '0-341', clb: 0 }
+    ]
+  }
+}
+
+// Helper function to get CLB level from dropdown value
+function getCLBFromDropdownValue(examType, skill, value) {
+  if (!value) return 0
+
+  let options
+  if (examType === 1) {
+    // IELTS
+    options = LANGUAGE_SCORE_OPTIONS.ielts_pte
+  } else if (examType === 2) {
+    // CELPIP-G
+    options = LANGUAGE_SCORE_OPTIONS.celpip
+  } else if (examType === 5) {
+    // PTE Core
+    options = LANGUAGE_SCORE_OPTIONS.ielts_pte
+  } else if (examType === 3) {
+    // TEF Canada
+    if (skill === 'listening') {
+      options = LANGUAGE_SCORE_OPTIONS.tef.listening
+    } else {
+      options = LANGUAGE_SCORE_OPTIONS.tef.speaking_writing_reading
+    }
+  } else if (examType === 4) {
+    // TCF Canada
+    if (skill === 'listening') {
+      options = LANGUAGE_SCORE_OPTIONS.tcf.listening
+    } else if (skill === 'reading') {
+      options = LANGUAGE_SCORE_OPTIONS.tcf.reading
+    } else {
+      options = LANGUAGE_SCORE_OPTIONS.tcf.speaking_writing
+    }
+  } else {
+    return 0
+  }
+
+  const option = options.find(opt => opt.value === value)
+  return option ? option.clb : 0
+}
 
 // Age Points Calculator
 export function calculateAgePoints(age) {
@@ -77,12 +209,14 @@ export function calculateAgePoints(age) {
     42: 107,
     43: 103,
     44: 99,
+    45: 95, // 45 years old
   }
   return agePoints[age] || 0
 }
 
 // Education Points Calculator
-export function calculateEducationPoints(educationLevel, hasSpouse) {
+export function calculateEducationPoints(educationLevel, maritalStatus) {
+  const hasSpouse = maritalStatus === 2 || maritalStatus === 5; // Common-Law or Married
   const educationPoints = {
     1: hasSpouse ? 0 : 0, // Less than secondary school
     2: hasSpouse ? 28 : 30, // Secondary diploma
@@ -101,41 +235,20 @@ export function getMaxScoreForTest(examType) {
   const maxScores = {
     1: 9, // IELTS - General Training (0-9)
     2: 12, // CELPIP - General test (0-12)
-    3: 9, // TEF Canada (0-9)
-    4: 9, // TCF Canada (0-9)
+    3: 450, // TEF Canada (0-450)
+    4: 450, // TCF Canada (0-450)
+    5: 90, // PTE Core (0-90)
   }
   return maxScores[examType] || 9
 }
 
-// Convert language test scores to CLB levels
+// Convert language test scores to CLB levels (using dropdown values)
 export function convertToCLB(examType, speaking, writing, reading, listening) {
-  const maxScore = getMaxScoreForTest(examType)
-
-  // Test-specific CLB conversion tables
-  if (examType === 2) {
-    // CELPIP - General test
-    return {
-      speaking: convertCELPIPToCLB(speaking),
-      writing: convertCELPIPToCLB(writing),
-      reading: convertCELPIPToCLB(reading),
-      listening: convertCELPIPToCLB(listening),
-    }
-  } else if (examType === 1) {
-    // IELTS - General Training
-    return {
-      speaking: convertIELTSToCLB(speaking),
-      writing: convertIELTSToCLB(writing),
-      reading: convertIELTSToCLB(reading),
-      listening: convertIELTSToCLB(listening),
-    }
-  } else {
-    // Simplified conversion for other tests (TEF, TCF)
-    return {
-      speaking: Math.min(Math.floor(speaking), 10),
-      writing: Math.min(Math.floor(writing), 10),
-      reading: Math.min(Math.floor(reading), 10),
-      listening: Math.min(Math.floor(listening), 10),
-    }
+  return {
+    speaking: getCLBFromDropdownValue(examType, 'speaking', speaking),
+    writing: getCLBFromDropdownValue(examType, 'writing', writing),
+    reading: getCLBFromDropdownValue(examType, 'reading', reading),
+    listening: getCLBFromDropdownValue(examType, 'listening', listening),
   }
 }
 
@@ -164,6 +277,44 @@ function convertIELTSToCLB(score) {
   if (score >= 5.0) return 4 // IELTS 5.0 = CLB 4
   if (score >= 4.0) return 3 // IELTS 4.0 = CLB 3
   return Math.max(0, Math.floor(score))
+}
+
+// PTE Core to CLB conversion table
+function convertPTEToCLB(score) {
+  if (score >= 89) return 10 // PTE 89-90 = CLB 10
+  if (score >= 84) return 9 // PTE 84-88 = CLB 9
+  if (score >= 79) return 8 // PTE 79-83 = CLB 8
+  if (score >= 73) return 7 // PTE 73-78 = CLB 7
+  if (score >= 64) return 6 // PTE 64-72 = CLB 6
+  if (score >= 59) return 5 // PTE 59-63 = CLB 5
+  if (score >= 51) return 4 // PTE 51-58 = CLB 4
+  if (score >= 41) return 3 // PTE 41-50 = CLB 3
+  return Math.max(0, Math.floor(score / 10))
+}
+
+// TEF Canada to CLB conversion table (Speaking, Writing, Reading)
+function convertTEFToCLB(score) {
+  if (score >= 393) return 10 // TEF 393-450 = CLB 10
+  if (score >= 371) return 9 // TEF 371-392 = CLB 9
+  if (score >= 349) return 8 // TEF 349-370 = CLB 8
+  if (score >= 310) return 7 // TEF 310-348 = CLB 7
+  if (score >= 271) return 6 // TEF 271-309 = CLB 6
+  if (score >= 226) return 5 // TEF 226-270 = CLB 5
+  if (score >= 181) return 4 // TEF 181-225 = CLB 4
+  if (score >= 121) return 3 // TEF 121-180 = CLB 3
+  return Math.max(0, Math.floor(score / 45))
+}
+
+// TEF Canada to CLB conversion table (Listening - different ranges)
+function convertTEFToListeningCLB(score) {
+  if (score >= 316) return 10 // TEF 316-360 = CLB 10
+  if (score >= 298) return 9 // TEF 298-315 = CLB 9
+  if (score >= 280) return 8 // TEF 280-297 = CLB 8
+  if (score >= 249) return 7 // TEF 249-279 = CLB 7
+  if (score >= 217) return 6 // TEF 217-248 = CLB 6
+  if (score >= 181) return 5 // TEF 181-216 = CLB 5
+  if (score >= 145) return 4 // TEF 145-180 = CLB 4
+  return Math.max(0, Math.floor(score / 36))
 }
 
 // Calculate First Language Points
@@ -226,7 +377,8 @@ export function calculateSecondLanguagePoints(clbScores) {
 }
 
 // Canadian Work Experience Points
-export function calculateCanadianExperiencePoints(years, hasSpouse) {
+export function calculateCanadianExperiencePoints(years, maritalStatus) {
+  const hasSpouse = maritalStatus === 2 || maritalStatus === 5; // Common-Law or Married
   const experiencePoints = {
     0: 0,
     1: hasSpouse ? 35 : 40,
@@ -368,41 +520,53 @@ export function calculateAdditionalPoints(data) {
   return points
 }
 
-// Dynamic validation for language scores based on test type
+// Dynamic validation for language scores based on test type (dropdown values)
 function validateLanguageScores(data) {
   const errors = []
 
-  // Validate first language scores
-  const firstLangMax = getMaxScoreForTest(data.firstLanguageExam)
-  if (data.firstLanguageSpeaking > firstLangMax) {
-    errors.push(`First language speaking score cannot exceed ${firstLangMax} for selected test`)
+  // Validate first language scores (dropdown values)
+  if (!data.firstLanguageSpeaking) {
+    errors.push('First language speaking score is required')
   }
-  if (data.firstLanguageWriting > firstLangMax) {
-    errors.push(`First language writing score cannot exceed ${firstLangMax} for selected test`)
+  if (!data.firstLanguageWriting) {
+    errors.push('First language writing score is required')
   }
-  if (data.firstLanguageReading > firstLangMax) {
-    errors.push(`First language reading score cannot exceed ${firstLangMax} for selected test`)
+  if (!data.firstLanguageReading) {
+    errors.push('First language reading score is required')
   }
-  if (data.firstLanguageListening > firstLangMax) {
-    errors.push(`First language listening score cannot exceed ${firstLangMax} for selected test`)
+  if (!data.firstLanguageListening) {
+    errors.push('First language listening score is required')
   }
 
   // Validate second language scores if provided
   if (data.hasSecondLanguage && data.secondLanguageExam) {
-    const secondLangMax = getMaxScoreForTest(data.secondLanguageExam)
-    if (data.secondLanguageSpeaking > secondLangMax) {
-      errors.push(`Second language speaking score cannot exceed ${secondLangMax} for selected test`)
+    if (!data.secondLanguageSpeaking) {
+      errors.push('Second language speaking score is required when second language test is selected')
     }
-    if (data.secondLanguageWriting > secondLangMax) {
-      errors.push(`Second language writing score cannot exceed ${secondLangMax} for selected test`)
+    if (!data.secondLanguageWriting) {
+      errors.push('Second language writing score is required when second language test is selected')
     }
-    if (data.secondLanguageReading > secondLangMax) {
-      errors.push(`Second language reading score cannot exceed ${secondLangMax} for selected test`)
+    if (!data.secondLanguageReading) {
+      errors.push('Second language reading score is required when second language test is selected')
     }
-    if (data.secondLanguageListening > secondLangMax) {
-      errors.push(
-        `Second language listening score cannot exceed ${secondLangMax} for selected test`
-      )
+    if (!data.secondLanguageListening) {
+      errors.push('Second language listening score is required when second language test is selected')
+    }
+  }
+
+  // Validate spouse language scores if provided
+  if (data.spouseLanguageExam && data.spouseLanguageExam !== 0) {
+    if (!data.spouseLanguageSpeaking) {
+      errors.push('Spouse language speaking score is required when spouse language test is selected')
+    }
+    if (!data.spouseLanguageWriting) {
+      errors.push('Spouse language writing score is required when spouse language test is selected')
+    }
+    if (!data.spouseLanguageReading) {
+      errors.push('Spouse language reading score is required when spouse language test is selected')
+    }
+    if (!data.spouseLanguageListening) {
+      errors.push('Spouse language listening score is required when spouse language test is selected')
     }
   }
 
@@ -430,7 +594,7 @@ export function calculateCRS(data) {
 
   // Section A: Core Human Capital Factors
   const agePoints = calculateAgePoints(validData.age)
-  const educationPoints = calculateEducationPoints(validData.educationLevel, validData.hasSpouse)
+  const educationPoints = calculateEducationPoints(validData.educationLevel, validData.maritalStatus)
 
   const firstLangCLB = convertToCLB(
     validData.firstLanguageExam,
@@ -439,7 +603,9 @@ export function calculateCRS(data) {
     validData.firstLanguageReading,
     validData.firstLanguageListening
   )
-  const firstLanguagePoints = calculateFirstLanguagePoints(firstLangCLB, validData.hasSpouse)
+
+  const hasSpouse = validData.maritalStatus === 2 || validData.maritalStatus === 5; // Common-Law or Married
+  const firstLanguagePoints = calculateFirstLanguagePoints(firstLangCLB, hasSpouse)
 
   let secondLanguagePoints = 0
   if (validData.hasSecondLanguage && validData.secondLanguageExam) {
@@ -455,7 +621,7 @@ export function calculateCRS(data) {
 
   const canadianExperiencePoints = calculateCanadianExperiencePoints(
     validData.canadianExperience,
-    validData.hasSpouse
+    validData.maritalStatus
   )
 
   breakdown.sectionA.points =
@@ -473,19 +639,19 @@ export function calculateCRS(data) {
   }
 
   // Section B: Spouse Factors (if applicable)
-  if (validData.hasSpouse) {
+  if (hasSpouse) {
     const spouseEducationPoints = calculateSpouseEducationPoints(
       validData.spouseEducationLevel || 1
     )
 
     let spouseLanguagePoints = 0
-    if (validData.spouseLanguageSpeaking !== undefined) {
+    if (validData.spouseLanguageExam && validData.spouseLanguageExam !== 0 && validData.spouseLanguageSpeaking) {
       const spouseCLB = convertToCLB(
-        1, // Assume English
-        validData.spouseLanguageSpeaking || 0,
-        validData.spouseLanguageWriting || 0,
-        validData.spouseLanguageReading || 0,
-        validData.spouseLanguageListening || 0
+        validData.spouseLanguageExam,
+        validData.spouseLanguageSpeaking,
+        validData.spouseLanguageWriting,
+        validData.spouseLanguageReading,
+        validData.spouseLanguageListening
       )
       spouseLanguagePoints = calculateSpouseLanguagePoints(spouseCLB)
     }
