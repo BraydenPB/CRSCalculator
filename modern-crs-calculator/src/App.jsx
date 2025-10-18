@@ -444,7 +444,7 @@ const EducationForm = ({ data, onChange }) => (
   <div className="form-section fade-in">
     <h3 className="section-title">Education</h3>
 
-    <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+    <div className="grid grid-cols-1 gap-8">
       <div className="space-y-6">
         <div className="form-group">
           <label className="form-label flex items-center gap-2">
