@@ -1,6 +1,7 @@
 import { h } from 'preact'
 import { useState, useRef, useEffect } from 'preact/hooks'
 import { calculateCRS, getMaxScoreForTest } from './crsLogic.js'
+import ThemeToggle from './components/ThemeToggle.jsx'
 
 // Language score dropdown options based on new-scores-data.txt
 const LANGUAGE_SCORE_OPTIONS = {
@@ -211,7 +212,7 @@ const CustomDropdown = ({ options, value, onChange, placeholder, className = "" 
         aria-expanded={isOpen}
         aria-haspopup="listbox"
       >
-        <span className={value ? 'text-gray-900' : 'custom-dropdown-placeholder'}>
+        <span className={value ? 'text-gray-900 dark:text-gray-100' : 'custom-dropdown-placeholder'}>
           {displayValue}
         </span>
         <svg
@@ -275,10 +276,10 @@ const LanguageScoreDropdown = ({ examType, skill, value, onChange, label }) => {
           <div className="absolute right-4 top-1/2 transform -translate-y-1/2 z-10">
             <span className={`inline-flex items-center px-2 py-1 rounded-full text-xs font-medium ${
               selectedOption.clb >= 9
-                ? 'bg-green-100 text-green-800'
+                ? 'bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200'
                 : selectedOption.clb >= 7
-                ? 'bg-yellow-100 text-yellow-800'
-                : 'bg-red-100 text-red-800'
+                ? 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-200'
+                : 'bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-200'
             }`}>
               CLB {selectedOption.clb}
             </span>
@@ -308,7 +309,7 @@ const PersonalInfoForm = ({ data, onChange }) => (
       <div className="form-group">
         <label className="form-label flex items-center gap-2">
           Age
-          <span className="text-xs font-normal text-gray-500 bg-gray-100 px-2 py-1 rounded-full">
+          <span className="text-xs font-normal text-gray-500 bg-gray-100 px-2 py-1 rounded-full ml-2">
             17-45 years
           </span>
         </label>
@@ -327,10 +328,10 @@ const PersonalInfoForm = ({ data, onChange }) => (
             <div className="absolute right-3 top-1/2 transform -translate-y-1/2">
               <span className={`text-xs font-medium px-2 py-1 rounded-full ${
                 data.age >= 20 && data.age <= 29
-                  ? 'bg-green-100 text-green-800'
+                  ? 'bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200'
                   : data.age >= 18 && data.age <= 35
-                  ? 'bg-yellow-100 text-yellow-800'
-                  : 'bg-red-100 text-red-800'
+                  ? 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-200'
+                  : 'bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-200'
               }`}>
                 {data.age >= 20 && data.age <= 29 ? 'Max points' :
                  data.age >= 18 && data.age <= 35 ? 'Good points' : 'Lower points'}
@@ -443,7 +444,7 @@ const EducationForm = ({ data, onChange }) => (
   <div className="form-section fade-in">
     <h3 className="section-title">Education</h3>
 
-    <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+    <div className="grid grid-cols-1 gap-8">
       <div className="space-y-6">
         <div className="form-group">
           <label className="form-label flex items-center gap-2">
@@ -473,12 +474,12 @@ const EducationForm = ({ data, onChange }) => (
               <div className="absolute right-12 top-1/2 transform -translate-y-1/2">
                 <span className={`inline-flex items-center px-2 py-1 rounded-full text-xs font-medium ${
                   parseInt(data.educationLevel) >= 7
-                    ? 'bg-green-100 text-green-800'
+                    ? 'bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200'
                     : parseInt(data.educationLevel) >= 5
-                    ? 'bg-blue-100 text-blue-800'
+                    ? 'bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-200'
                     : parseInt(data.educationLevel) >= 3
-                    ? 'bg-yellow-100 text-yellow-800'
-                    : 'bg-gray-100 text-gray-800'
+                    ? 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-200'
+                    : 'bg-gray-100 text-gray-800 dark:bg-gray-700 dark:text-gray-200'
                 }`}>
                   {parseInt(data.educationLevel) >= 7 ? 'High points' :
                    parseInt(data.educationLevel) >= 5 ? 'Good points' :
@@ -619,7 +620,7 @@ const LanguageForm = ({ data, onChange }) => {
             />
           </div>
 
-          <div className="grid grid-cols-2 gap-4">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
             <LanguageScoreDropdown
               examType={data.firstLanguageExam || 1}
               skill="speaking"
@@ -677,7 +678,7 @@ const LanguageForm = ({ data, onChange }) => {
               </select>
             </div>
 
-            <div className="grid grid-cols-2 gap-4">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
               <LanguageScoreDropdown
                 examType={data.secondLanguageExam || 1}
                 skill="speaking"
@@ -711,14 +712,15 @@ const LanguageForm = ({ data, onChange }) => {
         )}
       </div>
 
-      <div className="form-group">
-        <label className="form-label">
+      <div className="form-group mt-4">
+        <label className="form-label flex items-center gap-3 cursor-pointer">
           <input
             type="checkbox"
             checked={data.hasSecondLanguage || false}
             onChange={e => onChange('hasSecondLanguage', e.target.checked)}
+            className="w-4 h-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500"
           />{' '}
-          I have second language test results
+          <span className="text-gray-900 dark:text-gray-100">I have second language test results</span>
         </label>
       </div>
     </div>
@@ -758,7 +760,7 @@ const SpouseLanguageForm = ({ data, onChange }) => {
           </div>
 
           {data.spouseLanguageExam && data.spouseLanguageExam !== '0' && (
-            <div className="grid grid-cols-2 gap-4">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
               <LanguageScoreDropdown
                 examType={data.spouseLanguageExam}
                 skill="speaking"
@@ -920,7 +922,7 @@ const ResultsDisplay = ({ result }) => {
 
       <div className="text-center mb-8">
         <div className={`text-5xl font-bold ${getScoreColor(totalScore)}`}>{totalScore}</div>
-        <div className="text-gray-600 mt-2">points out of 1200+</div>
+        <div className="text-gray-600 mt-2 dark:text-gray-400">points out of 1200+</div>
       </div>
 
       <div className="space-y-4">
@@ -929,7 +931,7 @@ const ResultsDisplay = ({ result }) => {
           <div className="text-2xl font-bold text-blue-600 mb-2">
             {breakdown.sectionA.points} points
           </div>
-          <div className="grid grid-cols-2 md:grid-cols-3 gap-3 text-sm">
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3 text-sm">
             <div>Age: {breakdown.sectionA.details.age} pts</div>
             <div>Education: {breakdown.sectionA.details.education} pts</div>
             <div>First Language: {breakdown.sectionA.details.firstLanguage} pts</div>
@@ -946,7 +948,7 @@ const ResultsDisplay = ({ result }) => {
             <div className="text-2xl font-bold text-blue-600 mb-2">
               {breakdown.sectionB.points} points
             </div>
-            <div className="grid grid-cols-3 gap-3 text-sm">
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 text-sm">
               <div>Education: {breakdown.sectionB.details.education} pts</div>
               <div>Language: {breakdown.sectionB.details.language} pts</div>
               <div>Experience: {breakdown.sectionB.details.experience} pts</div>
@@ -989,8 +991,8 @@ const ResultsDisplay = ({ result }) => {
         </div>
       </div>
 
-      <div className="mt-6 p-4 bg-gray-50 rounded-lg">
-        <p className="text-sm text-gray-600">
+      <div className="mt-6 p-4 bg-gray-50 rounded-lg dark:bg-gray-700">
+        <p className="text-sm text-gray-600 dark:text-gray-300">
           <strong>Note:</strong> This calculator provides an estimate of your CRS score. Actual
           scores may vary based on official IRCC calculations and policy changes.
         </p>
@@ -1069,24 +1071,43 @@ export default function App() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-50 via-blue-50 to-indigo-50">
-      <div className="container mx-auto px-4 py-8 max-w-7xl">
-        <header className="text-center space-section-sm fade-in">
-          <div className="bg-white rounded-2xl shadow-xl p-10 border border-gray-100">
-            <div className="flex items-center justify-center gap-4 mb-6">
-              <div className="w-12 h-12 bg-gradient-to-r from-blue-600 to-indigo-600 rounded-full flex items-center justify-center">
-                <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+    <div className="min-h-screen bg-gradient-to-br from-gray-50 via-blue-50 to-indigo-50 dark:from-gray-900 dark:via-gray-800 dark:to-gray-900">
+      {/* Mobile-First Container: Desktop only */}
+      <div className="lg:container lg:mx-auto lg:px-8 lg:py-12 lg:max-w-7xl">
+        {/* Mobile Sticky Header */}
+        <div className="lg:hidden sticky top-0 z-40 bg-white/95 backdrop-blur-lg border-b border-gray-200 dark:bg-gray-900/95 dark:border-gray-700">
+          <div className="flex items-center justify-between px-4 py-3">
+            <div className="flex items-center gap-3">
+              <div className="w-8 h-8 bg-gradient-to-r from-blue-600 to-indigo-600 rounded-lg flex items-center justify-center">
+                <svg className="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
                 </svg>
               </div>
-              <h1 className="text-4xl font-bold bg-gradient-to-r from-blue-600 to-indigo-600 bg-clip-text text-transparent">
-                Modern CRS Calculator
-              </h1>
+              <h1 className="text-lg font-bold text-gray-900 dark:text-gray-100">CRS Calculator</h1>
             </div>
-            <p className="text-lg text-gray-600 mb-8">
+            <ThemeToggle />
+          </div>
+        </div>
+        {/* Desktop Header */}
+        <header className="hidden lg:block text-center space-section-sm fade-in">
+          <div className="bg-white rounded-2xl shadow-xl p-10 border border-gray-100 dark:bg-gray-800 dark:border-gray-700">
+            <div className="flex items-center justify-between mb-6">
+              <div className="flex items-center justify-center gap-4 flex-1">
+                <div className="w-12 h-12 bg-gradient-to-r from-blue-600 to-indigo-600 rounded-full flex items-center justify-center">
+                  <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                  </svg>
+                </div>
+                <h1 className="text-4xl font-bold bg-gradient-to-r from-blue-600 to-indigo-600 bg-clip-text text-transparent">
+                  Modern CRS Calculator
+                </h1>
+              </div>
+              <ThemeToggle />
+            </div>
+            <p className="text-lg text-gray-600 mb-8 dark:text-gray-300">
               Calculate your Comprehensive Ranking System score for Canadian Express Entry
             </p>
-            <div className="flex items-center justify-center gap-6 text-sm text-gray-500">
+            <div className="flex items-center justify-center gap-6 text-sm text-gray-500 dark:text-gray-400">
               <div className="flex items-center gap-2">
                 <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
@@ -1109,81 +1130,62 @@ export default function App() {
           </div>
         </header>
 
-        {errors.general && (
-          <div className="bg-red-50 border border-red-200 text-red-700 px-6 py-4 rounded-xl mb-8 flex items-center gap-3 fade-in">
-            <svg className="w-5 h-5 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-            </svg>
-            <span className="font-medium">{errors.general}</span>
-          </div>
-        )}
-
+    
+        {/* Main Form Content */}
         <div className="calculator-grid">
-          <div className="lg:col-span-2 space-y-8">
-            <div className="bg-white rounded-2xl shadow-lg p-6 border border-gray-100">
-              <div className="flex items-center gap-2 mb-6">
-                <div className="w-6 h-6 bg-blue-100 rounded-full flex items-center justify-center">
-                  <span className="text-xs font-bold text-blue-600">1</span>
+          <div className="lg:col-span-3 space-y-6 lg:space-y-8">
+            {/* Mobile Form Sections */}
+            <div className="lg:hidden">
+              {/* Core Information - Mobile */}
+              <div className="form-section-mobile">
+                <div className="flex items-center gap-3 mb-4">
+                  <div className="w-8 h-8 bg-blue-100 rounded-xl flex items-center justify-center dark:bg-blue-900">
+                    <span className="text-sm font-bold text-blue-600 dark:text-blue-300">1</span>
+                  </div>
+                  <h2 className="text-xl font-bold text-gray-900 dark:text-gray-100">Core Information</h2>
                 </div>
-                <h2 className="text-lg font-semibold text-gray-900">Core Information</h2>
+                <PersonalInfoForm data={formData} onChange={handleInputChange} />
               </div>
-              <PersonalInfoForm data={formData} onChange={handleInputChange} />
-            </div>
 
-            <div className="bg-white rounded-2xl shadow-lg p-6 border border-gray-100">
-              <div className="flex items-center gap-2 mb-6">
-                <div className="w-6 h-6 bg-green-100 rounded-full flex items-center justify-center">
-                  <span className="text-xs font-bold text-green-600">2</span>
+              {/* Education & Language - Mobile */}
+              <div className="form-section-mobile">
+                <div className="flex items-center gap-3 mb-4">
+                  <div className="w-8 h-8 bg-green-100 rounded-xl flex items-center justify-center dark:bg-green-900">
+                    <span className="text-sm font-bold text-green-600 dark:text-green-300">2</span>
+                  </div>
+                  <h2 className="text-xl font-bold text-gray-900 dark:text-gray-100">Education & Language</h2>
                 </div>
-                <h2 className="text-lg font-semibold text-gray-900">Education & Language</h2>
-              </div>
-              <div className="space-y-8">
-                <EducationForm data={formData} onChange={handleInputChange} />
-                <LanguageForm data={formData} onChange={handleInputChange} />
-                <SpouseLanguageForm data={formData} onChange={handleInputChange} />
-              </div>
-            </div>
-
-            <div className="bg-white rounded-2xl shadow-lg p-6 border border-gray-100">
-              <div className="flex items-center gap-2 mb-6">
-                <div className="w-6 h-6 bg-purple-100 rounded-full flex items-center justify-center">
-                  <span className="text-xs font-bold text-purple-600">3</span>
+                <div className="space-y-6">
+                  <EducationForm data={formData} onChange={handleInputChange} />
+                  <LanguageForm data={formData} onChange={handleInputChange} />
+                  <SpouseLanguageForm data={formData} onChange={handleInputChange} />
                 </div>
-                <h2 className="text-lg font-semibold text-gray-900">Experience & Additional Factors</h2>
               </div>
-              <div className="space-y-8">
-                <ExperienceForm data={formData} onChange={handleInputChange} />
-                <AdditionalFactorsForm data={formData} onChange={handleInputChange} />
-              </div>
-            </div>
 
-            <div className="text-center space-section-sm">
-              <button
-                onClick={calculateScore}
-                className="btn-primary"
-              >
-                <span className="flex items-center gap-3">
-                  <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 7h6m0 10v-3m-3 3h.01M9 17h.01M9 14h.01M12 14h.01M15 11h.01M12 11h.01M9 11h.01M7 21h10a2 2 0 002-2V5a2 2 0 00-2-2H7a2 2 0 00-2 2v14a2 2 0 002 2z" />
-                  </svg>
-                  Calculate My CRS Score
-                </span>
-              </button>
-            </div>
-          </div>
-
-          <div className="lg:col-span-1">
-            {result && <ResultsDisplay result={result} />}
-
-            {!result && (
-              <div className="bg-white rounded-2xl shadow-lg p-6 border border-gray-100 sticky top-8">
-                <div className="flex items-center gap-2 mb-4">
-                  <svg className="w-5 h-5 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-                  </svg>
-                  <h3 className="font-semibold text-gray-900">Quick Tips</h3>
+              {/* Experience & Additional Factors - Mobile */}
+              <div className="form-section-mobile">
+                <div className="flex items-center gap-3 mb-4">
+                  <div className="w-8 h-8 bg-purple-100 rounded-xl flex items-center justify-center dark:bg-purple-900">
+                    <span className="text-sm font-bold text-purple-600 dark:text-purple-300">3</span>
+                  </div>
+                  <h2 className="text-xl font-bold text-gray-900 dark:text-gray-100">Experience & Additional Factors</h2>
                 </div>
-                <div className="space-y-3 text-sm text-gray-600">
+                <div className="space-y-6">
+                  <ExperienceForm data={formData} onChange={handleInputChange} />
+                  <AdditionalFactorsForm data={formData} onChange={handleInputChange} />
+                </div>
+              </div>
+
+              {/* Mobile Quick Tips */}
+              {!result && (
+                <div className="bg-blue-50 rounded-2xl p-4 border border-blue-100 dark:bg-blue-900/20 dark:border-blue-800/50">
+                  <div className="flex items-center gap-2 mb-3">
+                    <svg className="w-5 h-5 text-blue-600 dark:text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                    </svg>
+                    <h3 className="font-semibold text-blue-900 dark:text-blue-100">Quick Tips</h3>
+                  </div>
+                  <div className="space-y-2 text-sm text-blue-800 dark:text-blue-200">
                   <div className="flex items-start gap-2">
                     <svg className="w-4 h-4 text-green-500 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
@@ -1211,16 +1213,131 @@ export default function App() {
                 </div>
               </div>
             )}
+            </div>
+
+            {/* Desktop Form Sections */}
+            <div className="hidden lg:block">
+              <div className="bg-white rounded-2xl shadow-lg p-6 border border-gray-100 dark:bg-gray-800 dark:border-gray-700 mb-8">
+                <div className="flex items-center gap-2 mb-6">
+                  <div className="w-6 h-6 bg-blue-100 rounded-full flex items-center justify-center dark:bg-blue-900">
+                    <span className="text-xs font-bold text-blue-600 dark:text-blue-300">1</span>
+                  </div>
+                  <h2 className="text-lg font-semibold text-gray-900 dark:text-gray-100">Core Information</h2>
+                </div>
+                <PersonalInfoForm data={formData} onChange={handleInputChange} />
+              </div>
+
+              <div className="bg-white rounded-2xl shadow-lg p-6 border border-gray-100 dark:bg-gray-800 dark:border-gray-700 mb-8">
+                <div className="flex items-center gap-2 mb-6">
+                  <div className="w-6 h-6 bg-green-100 rounded-full flex items-center justify-center dark:bg-green-900">
+                    <span className="text-xs font-bold text-green-600 dark:text-green-300">2</span>
+                  </div>
+                  <h2 className="text-lg font-semibold text-gray-900 dark:text-gray-100">Education & Language</h2>
+                </div>
+                <div className="space-y-8">
+                  <EducationForm data={formData} onChange={handleInputChange} />
+                  <LanguageForm data={formData} onChange={handleInputChange} />
+                  <SpouseLanguageForm data={formData} onChange={handleInputChange} />
+                </div>
+              </div>
+
+              <div className="bg-white rounded-2xl shadow-lg p-6 border border-gray-100 dark:bg-gray-800 dark:border-gray-700 mb-8">
+                <div className="flex items-center gap-2 mb-6">
+                  <div className="w-6 h-6 bg-purple-100 rounded-full flex items-center justify-center dark:bg-purple-900">
+                    <span className="text-xs font-bold text-purple-600 dark:text-purple-300">3</span>
+                  </div>
+                  <h2 className="text-lg font-semibold text-gray-900 dark:text-gray-100">Experience & Additional Factors</h2>
+                </div>
+                <div className="space-y-8">
+                  <ExperienceForm data={formData} onChange={handleInputChange} />
+                  <AdditionalFactorsForm data={formData} onChange={handleInputChange} />
+                </div>
+              </div>
+
+              {/* Desktop Calculate Button */}
+              <div className="text-center space-section">
+                {/* Desktop Error Display - Contextual */}
+                {errors.general && (
+                  <div className="mb-6 bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-xl flex items-center gap-3 fade-in shadow-lg shadow-red-100/50 dark:shadow-red-900/20">
+                    <svg className="w-5 h-5 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                    </svg>
+                    <span className="font-medium text-sm">{errors.general}</span>
+                  </div>
+                )}
+                <button
+                  onClick={calculateScore}
+                  className="btn-primary"
+                >
+                  <span className="flex items-center gap-3">
+                    <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 7h6m0 10v-3m-3 3h.01M9 17h.01M9 14h.01M12 14h.01M15 11h.01M12 11h.01M9 11h.01M7 21h10a2 2 0 002-2V5a2 2 0 00-2-2H7a2 2 0 00-2 2v14a2 2 0 002 2z" />
+                    </svg>
+                    Calculate My CRS Score
+                  </span>
+                </button>
+              </div>
+
+              {!result && (
+                <div className="bg-white rounded-2xl shadow-lg p-6 border border-gray-100 dark:bg-gray-800 dark:border-gray-700">
+                  <div className="flex items-center gap-2 mb-4">
+                    <svg className="w-5 h-5 text-blue-600 dark:text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                    </svg>
+                    <h3 className="font-semibold text-gray-900 dark:text-gray-100">Quick Tips</h3>
+                  </div>
+                  <div className="space-y-3 text-sm text-gray-600 dark:text-gray-300">
+                    <div className="flex items-start gap-2">
+                      <svg className="w-4 h-4 text-green-500 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                      </svg>
+                      <span>Age 20-29 years receives maximum points</span>
+                    </div>
+                    <div className="flex items-start gap-2">
+                      <svg className="w-4 h-4 text-green-500 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                      </svg>
+                      <span>CLB 9+ in all language skills gives maximum points</span>
+                    </div>
+                    <div className="flex items-start gap-2">
+                      <svg className="w-4 h-4 text-green-500 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                      </svg>
+                      <span>Canadian education adds bonus points</span>
+                    </div>
+                    <div className="flex items-start gap-2">
+                      <svg className="w-4 h-4 text-green-500 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                      </svg>
+                      <span>Provincial nomination adds 600 points</span>
+                    </div>
+                  </div>
+                </div>
+              )}
+            </div>
+
+            {/* Mobile Results Display */}
+            {result && <ResultsDisplay result={result} />}
           </div>
         </div>
 
-        <footer className="space-section pt-8 border-t border-gray-200">
-          <div className="text-center text-gray-600">
+        {/* Mobile Footer */}
+        <footer className="mt-auto py-6 px-4 border-t border-gray-200 dark:border-gray-600 lg:hidden">
+          <div className="text-center text-gray-600 dark:text-gray-400">
+            <p className="text-xs mb-2">
+              © 2025 Modern CRS Calculator. This tool is for informational purposes only.
+            </p>
+          </div>
+        </footer>
+
+        {/* Desktop Footer */}
+        <footer className="hidden lg:block space-section pt-8 border-t border-gray-200 dark:border-gray-600">
+          <div className="text-center text-gray-600 dark:text-gray-400">
             <p className="text-sm space-group-sm">
               © 2025 Modern CRS Calculator. This tool is for informational purposes only and does not
               constitute immigration advice.
             </p>
-            <div className="flex items-center justify-center gap-4 text-xs text-gray-500">
+            <div className="flex items-center justify-center gap-4 text-xs text-gray-500 dark:text-gray-500">
               <span>Privacy Policy</span>
               <span>•</span>
               <span>Terms of Use</span>
@@ -1229,6 +1346,27 @@ export default function App() {
             </div>
           </div>
         </footer>
+
+        {/* Mobile Error Display - Contextual */}
+        {errors.general && (
+          <div className="lg:hidden fixed bottom-24 right-6 left-6 z-40 bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-xl flex items-center gap-3 fade-in shadow-lg shadow-red-100/50 dark:shadow-red-900/20">
+            <svg className="w-5 h-5 text-red-600 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+            </svg>
+            <span className="font-medium text-sm flex-1">{errors.general}</span>
+          </div>
+        )}
+        {/* Mobile Floating Action Button */}
+        <div className="lg:hidden fixed bottom-6 right-6 z-50">
+          <button
+            onClick={calculateScore}
+            className="fab-button"
+          >
+            <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 7h6m0 10v-3m-3 3h.01M9 17h.01M9 14h.01M12 14h.01M15 11h.01M12 11h.01M9 11h.01M7 21h10a2 2 0 002-2V5a2 2 0 00-2-2H7a2 2 0 00-2 2v14a2 2 0 002 2z" />
+            </svg>
+          </button>
+        </div>
       </div>
     </div>
   )
