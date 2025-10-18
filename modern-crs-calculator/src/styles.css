@@ -95,7 +95,7 @@
 }
 
 .custom-dropdown-menu {
-  @apply absolute w-full bg-white border border-gray-200 border-t-0 rounded-b-xl shadow-2xl z-50 overflow-hidden;
+  @apply absolute w-full bg-white border border-gray-200 border-t-0 rounded-b-xl shadow-2xl z-50 overflow-y-auto;
   background-color: rgba(255, 255, 255, 0.98);
   backdrop-filter: blur(20px);
   max-height: 0;
